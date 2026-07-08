@@ -1,6 +1,6 @@
 import { useChatbot } from "../ChatbotContext";
 import HeroSlider from "../components/HeroSlider";
-import women from "../assets/women.jpeg";
+import women from "../assets/women.jpg";
 import "./Home.css";
 
 function Home() {
