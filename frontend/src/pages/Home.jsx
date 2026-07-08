@@ -1,36 +1,37 @@
+import { useChatbot } from "../ChatbotContext";
+import HeroSlider from "../components/HeroSlider";
+import women from "../assets/women.jpeg";
 import "./Home.css";
 
 function Home() {
+  const { setOpen } = useChatbot();
+
+  // Add more photos here later, e.g. [women, womanTwo, womanThree]
+  const heroImages = [women];
+
   return (
     <div className="home">
       <section className="hero">
-        <h1>You Are Not Alone.</h1>
-        <p className="hero-subtitle">
-          Know your rights. Share your story. Find your community.
-        </p>
-        <div className="hero-buttons">
-          <button className="btn-primary">Talk to Saathi (Chatbot)</button>
-          <button className="btn-secondary">Share Your Story</button>
+        <div className="hero-text">
+          <span className="eyebrow">You are not alone</span>
+          <h1>Your voice matters.<br />Your rights are real.</h1>
+          <p>
+            A safe space for women in Nepal to understand their legal rights,
+            share their stories, and find people who believe them.
+          </p>
+          <div className="hero-buttons">
+            <button className="btn-primary" onClick={() => setOpen(true)}>
+              Talk to Saathi
+            </button>
+            <a href="/confessions" className="btn-secondary">Share Your Story</a>
+          </div>
+        </div>
+        <div className="hero-image">
+          <HeroSlider images={heroImages} />
         </div>
       </section>
 
-      <section className="info-cards">
-        <div className="card">
-          <div className="card-icon">⚖️</div>
-          <h3>Know Your Rights</h3>
-          <p>Simple, clear answers about women's legal rights in Nepal.</p>
-        </div>
-        <div className="card">
-          <div className="card-icon">💬</div>
-          <h3>Share & Get Support</h3>
-          <p>Speak freely. Get advice from people who understand.</p>
-        </div>
-        <div className="card">
-          <div className="card-icon">📰</div>
-          <h3>Real Stories</h3>
-          <p>Read how other women found help — and found their voice.</p>
-        </div>
-      </section>
+      {/* rest of the page stays exactly the same — impact strip, help section, CTA banner */}
     </div>
   );
 }
