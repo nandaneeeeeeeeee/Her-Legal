@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ChatbotProvider } from "./ChatbotContext";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ChatbotWidget from "./components/ChatbotWidget";
@@ -12,20 +13,22 @@ import Confessions from "./pages/Confessions";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<AboutUs />} />
-        <Route path="/contact" element={<ContactHelp />} />
-        <Route path="/team" element={<Team />} />
-        <Route path="/campaigns" element={<Campaigns />} />
-        <Route path="/news" element={<News />} />
-        <Route path="/confessions" element={<Confessions />} />
-      </Routes>
-      <Footer />
-      <ChatbotWidget />
-    </BrowserRouter>
+    <ChatbotProvider>
+      <BrowserRouter>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/contact" element={<ContactHelp />} />
+          <Route path="/team" element={<Team />} />
+          <Route path="/campaigns" element={<Campaigns />} />
+          <Route path="/news" element={<News />} />
+          <Route path="/confessions" element={<Confessions />} />
+        </Routes>
+        <Footer />
+        <ChatbotWidget />
+      </BrowserRouter>
+    </ChatbotProvider>
   );
 }
 
