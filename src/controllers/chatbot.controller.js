@@ -3,29 +3,9 @@ import { Chat } from '../models/chat.model.js';
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-const womenTopics = [
-  'women', 'woman', 'girl', 'female', 'domestic violence', 'divorce',
-  'marriage', 'dowry', 'harassment', 'rape', 'abuse', 'property',
-  'inheritance', 'maternity', 'custody', 'gender', 'rights', 'legal',
-  'court', 'police', 'fir', 'widow', 'alimony', 'assault', 'protection',
-  'shelter', 'mahila', 'nari', 'law', 'violence'
-];
-
-const isWomenRelated = (message) => {
-  return womenTopics.some(topic =>
-    message.toLowerCase().includes(topic.toLowerCase())
-  );
-};
-
 export const chatWithAI = async (req, res) => {
   try {
     const { message, userId } = req.body;
-
-    if (!isWomenRelated(message)) {
-      return res.json({
-        response: 'I can only help with women-related legal questions in Nepal. Please ask about domestic violence, marriage, divorce, property rights, or harassment.'
-      });
-    }
 
     const completion = await groq.chat.completions.create({
       messages: [
