@@ -17,10 +17,10 @@ function ContactHelp() {
               ["Police Emergency", "100"],
               ["National Women Commission", "16600178585"],
             ].map(([name, number]) => (
-              <div key={name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 0", borderBottom: "1px solid var(--border)" }}>
+              <a key={name} href={`tel:${number}`} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 0", borderBottom: "1px solid var(--border)", textDecoration: "none" }}>
                 <span style={{ fontSize: 14, color: "var(--text-muted)" }}>{name}</span>
                 <span style={{ fontSize: 16, fontWeight: 700, color: "var(--primary)" }}>{number}</span>
-              </div>
+              </a>
             ))}
           </div>
         </div>
@@ -33,7 +33,7 @@ function ContactHelp() {
             <h3 style={{ marginBottom: 12 }}>Follow Us</h3>
             <div style={{ display: "flex", gap: 16 }}>
               {["Facebook", "Instagram", "Twitter"].map((s) => (
-                <span key={s} style={{ padding: "8px 16px", background: "var(--bg)", borderRadius: 999, fontSize: 13, fontWeight: 500, color: "var(--text-muted)", cursor: "default" }}>{s}</span>
+                <a key={s} href={`https://${s.toLowerCase()}.com`} target="_blank" rel="noopener noreferrer" style={{ padding: "8px 16px", background: "var(--bg)", borderRadius: 999, fontSize: 13, fontWeight: 500, color: "var(--text-muted)", cursor: "pointer", textDecoration: "none" }}>{s}</a>
               ))}
             </div>
           </div>

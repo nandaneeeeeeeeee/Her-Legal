@@ -8,6 +8,7 @@ function Confessions() {
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
   const [replyText, setReplyText] = useState({});
+  const [anonymous, setAnonymous] = useState(true);
 
   useEffect(() => { fetchPosts(); }, []);
 
@@ -26,7 +27,7 @@ function Confessions() {
       const res = await fetch("/api/v1/confessions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text, isAnonymous: true }),
+        body: JSON.stringify({ text, isAnonymous: anonymous }),
       });
       if (res.ok) {
         setText("");
@@ -69,7 +70,7 @@ function Confessions() {
         />
         <div className="post-box-footer">
           <label className="anonymous-toggle">
-            <input type="checkbox" defaultChecked readOnly />
+            <input type="checkbox" checked={anonymous} onChange={(e) => setAnonymous(e.target.checked)} />
             Post anonymously
           </label>
           <button className="btn btn-primary" onClick={sharePost} disabled={loading} style={{ padding: "10px 24px", fontSize: 14 }}>

@@ -29,6 +29,6 @@ export async function sendMail({ recipientEmail, subject, emailBody }) {
     };
   } catch (error) {
     console.error('Failed to send email:', error);
-    throw new ApiError('Failed to send email', 500);
+    throw new ApiError(500, 'Failed to send email');
   }
 }

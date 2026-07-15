@@ -1,11 +1,14 @@
 import Groq from 'groq-sdk';
 import { Chat } from '../models/chat.model.js';
+import { Conversation } from '../models/conversation.model.js';
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
+// ─── AI Chat ───
+
 export const chatWithAI = async (req, res) => {
   try {
-    const { message, userId } = req.body;
+    const { message, userId, conversationId } = req.body;
 
     const completion = await groq.chat.completions.create({
       messages: [
@@ -21,13 +24,17 @@ export const chatWithAI = async (req, res) => {
     const aiResponse = completion.choices[0].message.content;
 
     if (userId) {
-      const chat = new Chat({
-        userId,
-        message,
-        response: aiResponse,
-        isAnonymous: false
-      });
+      const chat = new Chat({ userId, message, response: aiResponse, isAnonymous: false });
       await chat.save();
+
+      if (conversationId) {
+        const conv = await Conversation.findById(conversationId);
+        if (conv && conv.userId.toString() === userId) {
+          conv.messages.push({ role: 'user', content: message });
+          conv.messages.push({ role: 'assistant', content: aiResponse });
+          await conv.save();
+        }
+      }
     }
 
     res.json({ response: aiResponse });
@@ -37,6 +44,66 @@ export const chatWithAI = async (req, res) => {
     res.status(500).json({ error: 'Something went wrong!' });
   }
 };
+
+// ─── Conversations ───
+
+export const createConversation = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    if (!userId) return res.status(400).json({ error: 'userId required' });
+    const conv = await Conversation.create({ userId, messages: [] });
+    res.status(201).json(conv);
+  } catch (error) {
+    res.status(500).json({ error: 'Could not create conversation' });
+  }
+};
+
+export const getConversations = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const conversations = await Conversation.find({ userId })
+      .sort({ updatedAt: -1 })
+      .select('title createdAt updatedAt');
+    res.json(conversations);
+  } catch (error) {
+    res.status(500).json({ error: 'Could not fetch conversations' });
+  }
+};
+
+export const getConversationMessages = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const conv = await Conversation.findById(id);
+    if (!conv) return res.status(404).json({ error: 'Conversation not found' });
+    res.json(conv.messages);
+  } catch (error) {
+    res.status(500).json({ error: 'Could not fetch messages' });
+  }
+};
+
+export const deleteConversation = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Conversation.findByIdAndDelete(id);
+    res.json({ message: 'Conversation deleted' });
+  } catch (error) {
+    res.status(500).json({ error: 'Could not delete conversation' });
+  }
+};
+
+export const renameConversation = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title } = req.body;
+    const conv = await Conversation.findByIdAndUpdate(id, { title }, { new: true });
+    if (!conv) return res.status(404).json({ error: 'Conversation not found' });
+    res.json(conv);
+  } catch (error) {
+    res.status(500).json({ error: 'Could not rename conversation' });
+  }
+};
+
+// ─── Legacy Chat History ───
 
 export const getChatHistory = async (req, res) => {
   try {

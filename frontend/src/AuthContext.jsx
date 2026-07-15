@@ -18,7 +18,7 @@ export function AuthProvider({ children }) {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.message || "Login failed");
-    const userData = { ...data.data, token: data.data?.accessToken };
+    const userData = { ...data.data.user, token: data.data?.accessToken };
     localStorage.setItem("herlegal_user", JSON.stringify(userData));
     setUser(userData);
     return userData;

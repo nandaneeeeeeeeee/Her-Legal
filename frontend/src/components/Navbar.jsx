@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X, Search, LogIn, LogOut, User } from "lucide-react";
 import { useAuth } from "../AuthContext";
 import "./Navbar.css";
@@ -9,6 +9,7 @@ function Navbar({ onLoginClick }) {
   const [open, setOpen] = useState(false);
   const { user, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -42,7 +43,7 @@ function Navbar({ onLoginClick }) {
           </ul>
         </div>
         <div className="nav-right">
-          <button className="btn btn-ghost" style={{ height: 36, padding: "0 12px" }}>
+          <button className="btn btn-ghost" style={{ height: 36, padding: "0 12px" }} onClick={() => navigate("/chat")}>
             <Search size={16} />
           </button>
           {user ? (
