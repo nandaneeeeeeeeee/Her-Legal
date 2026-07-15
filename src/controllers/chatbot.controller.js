@@ -1,9 +1,7 @@
-import OpenAI from 'openai';
+import Groq from 'groq-sdk';
 import { Chat } from '../models/chat.model.js';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 const womenTopics = [
   'women', 'woman', 'girl', 'female', 'domestic violence', 'divorce',
@@ -29,15 +27,15 @@ export const chatWithAI = async (req, res) => {
       });
     }
 
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
+    const completion = await groq.chat.completions.create({
       messages: [
         {
           role: 'system',
           content: 'You are a legal assistant for Her Legal, a platform helping women in Nepal understand their legal rights. Only answer questions related to women legal rights, domestic violence, marriage, divorce, property rights, and harassment laws in Nepal. Be helpful, clear, and supportive.'
         },
         { role: 'user', content: message }
-      ]
+      ],
+      model: 'llama-3.3-70b-versatile',
     });
 
     const aiResponse = completion.choices[0].message.content;
