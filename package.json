@@ -5,11 +5,10 @@
   "license": "ISC",
   "author": "",
   "type": "module",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "dev": "nodemon src/index.js",
-    "start": "node src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/index.js"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
@@ -22,9 +21,10 @@
     "joi": "^18.2.3",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.7.2",
-    "node-cron": "^4.5.0",
     "nodemailer": "^9.0.1",
-    "nodemon": "^3.1.14",
     "openai": "^6.45.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }
