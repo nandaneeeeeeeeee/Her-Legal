@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { useChatbot } from "../ChatbotContext";
 import {
   ArrowRight, Sparkles, Shield, Lock, MapPin, MessageCircle,
@@ -141,8 +142,10 @@ const articles = [
 // ─── EXPORT ───
 export default function Home() {
   const { setOpen } = useChatbot();
+  const navigate = useNavigate();
   const [faq, setFaq] = useState(null);
   const [search, setSearch] = useState("");
+  const topicsRef = useRef(null);
 
   const filteredArticles = articles.filter(a =>
     a.title.toLowerCase().includes(search.toLowerCase())
@@ -173,10 +176,10 @@ export default function Home() {
               Understand Nepali law in plain language. Get instant answers, generate documents, and take action — all in one place.
             </p>
             <div className="hero-actions reveal visible reveal-d3">
-              <button className="btn btn-primary" onClick={() => setOpen(true)}>
+              <button className="btn btn-primary" onClick={() => navigate("/chat")}>
                 Start AI Assistant <ArrowRight size={16} />
               </button>
-              <button className="btn btn-secondary">
+              <button className="btn btn-secondary" onClick={() => topicsRef.current?.scrollIntoView({ behavior: "smooth" })}>
                 Explore Legal Topics
               </button>
             </div>
@@ -246,7 +249,7 @@ export default function Home() {
       </section>
 
       {/* ═══════ LEGAL TOPICS ═══════ */}
-      <section className="topics-sec">
+      <section className="topics-sec" ref={topicsRef}>
         <div className="container">
           <Section>
             <span className="section-label">Legal Topics</span>
@@ -257,7 +260,7 @@ export default function Home() {
           <div className="topics-grid">
             {topics.map((topic, i) => (
               <Section key={topic.title} delay={`reveal-d${(i % 4) + 1}`}>
-                <div className="topic-card">
+                <div className="topic-card" onClick={() => navigate("/chat")} style={{ cursor: "pointer" }}>
                   <div className="topic-icon">{topic.icon}</div>
                   <h3>{topic.title}</h3>
                   <p>{topic.desc}</p>
@@ -315,13 +318,13 @@ export default function Home() {
                   { icon: <Shield size={20} />, label: "Police Emergency", number: "100" },
                   { icon: <Heart size={20} />, label: "Legal Aid", number: "16600178585" },
                 ].map((item) => (
-                  <div key={item.label} className="support-item">
+                  <a key={item.label} href={`tel:${item.number}`} className="support-item" style={{ textDecoration: "none", color: "inherit" }}>
                     <div className="support-item-icon">{item.icon}</div>
                     <div>
                       <strong>{item.label}</strong>
                       <span className="support-number">{item.number}</span>
                     </div>
-                  </div>
+                  </a>
                 ))}
               </div>
               <button className="btn btn-primary" style={{ marginTop: 32, background: "#fff", color: "var(--primary)", boxShadow: "none" }}
@@ -356,7 +359,7 @@ export default function Home() {
           <div className="hub-grid">
             {filteredArticles.map((article, i) => (
               <Section key={article.title} delay={`reveal-d${(i % 4) + 1}`}>
-                <div className="hub-card">
+                <div className="hub-card" onClick={() => navigate("/news")} style={{ cursor: "pointer" }}>
                   <span className="hub-tag">{article.tag}</span>
                   <h3>{article.title}</h3>
                   <div className="hub-footer">

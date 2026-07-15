@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { ChatbotProvider } from "./ChatbotContext";
 import { AuthProvider } from "./AuthContext";
 import Navbar from "./components/Navbar";
@@ -14,28 +14,40 @@ import Campaigns from "./pages/Campaigns";
 import News from "./pages/News";
 import Confessions from "./pages/Confessions";
 import ChatPage from "./pages/ChatPage";
+import NotFound from "./pages/NotFound";
+
+function AppLayout() {
+  const location = useLocation();
+  const [showAuth, setShowAuth] = useState(false);
+  const isChat = location.pathname === "/chat";
+
+  return (
+    <>
+      <Navbar onLoginClick={() => setShowAuth(true)} />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/contact" element={<ContactHelp />} />
+        <Route path="/team" element={<Team />} />
+        <Route path="/campaigns" element={<Campaigns />} />
+        <Route path="/news" element={<News />} />
+        <Route path="/confessions" element={<Confessions />} />
+        <Route path="/chat" element={<ChatPage />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      {!isChat && <Footer />}
+      {!isChat && <ChatbotWidget />}
+      <AuthModal open={showAuth} onClose={() => setShowAuth(false)} />
+    </>
+  );
+}
 
 function App() {
-  const [showAuth, setShowAuth] = useState(false);
-
   return (
     <AuthProvider>
       <ChatbotProvider>
         <BrowserRouter>
-          <Navbar onLoginClick={() => setShowAuth(true)} />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<AboutUs />} />
-            <Route path="/contact" element={<ContactHelp />} />
-            <Route path="/team" element={<Team />} />
-            <Route path="/campaigns" element={<Campaigns />} />
-            <Route path="/news" element={<News />} />
-            <Route path="/confessions" element={<Confessions />} />
-            <Route path="/chat" element={<ChatPage />} />
-          </Routes>
-          <Footer />
-          <ChatbotWidget />
-          <AuthModal open={showAuth} onClose={() => setShowAuth(false)} />
+          <AppLayout />
         </BrowserRouter>
       </ChatbotProvider>
     </AuthProvider>

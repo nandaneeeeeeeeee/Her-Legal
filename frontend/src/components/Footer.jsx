@@ -26,7 +26,7 @@ export default function Footer() {
           <div>
             <h4 style={{ fontSize: 12, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-muted)", marginBottom: 16 }}>Platform</h4>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {[["AI Assistant", "/"], ["Legal Topics", "/"], ["Documents", "/"], ["Knowledge Hub", "/news"]].map(([l, t]) => (
+              {[["AI Assistant", "/chat"], ["Legal Topics", "/#topics"], ["Documents", "/chat"], ["Knowledge Hub", "/news"]].map(([l, t]) => (
                 <Link key={l} to={t} style={{ fontSize: 13, color: "var(--text)", transition: "color 0.2s" }}
                   onMouseEnter={e => e.target.style.color = "var(--primary)"}
                   onMouseLeave={e => e.target.style.color = "var(--text)"}
@@ -38,7 +38,7 @@ export default function Footer() {
           <div>
             <h4 style={{ fontSize: 12, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-muted)", marginBottom: 16 }}>Company</h4>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {[["About", "/team"], ["Contact", "/contact"], ["Privacy", "/"], ["Terms", "/"]].map(([l, t]) => (
+              {[["About", "/team"], ["Contact", "/contact"], ["Privacy", "/contact"], ["Terms", "/contact"]].map(([l, t]) => (
                 <Link key={l} to={t} style={{ fontSize: 13, color: "var(--text)", transition: "color 0.2s" }}
                   onMouseEnter={e => e.target.style.color = "var(--primary)"}
                   onMouseLeave={e => e.target.style.color = "var(--text)"}
@@ -50,7 +50,7 @@ export default function Footer() {
           <div>
             <h4 style={{ fontSize: 12, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-muted)", marginBottom: 16 }}>Support</h4>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {[["Helpline", "/contact"], ["FAQ", "/"], ["Safety", "/"]].map(([l, t]) => (
+              {[["Helpline", "/contact"], ["FAQ", "/#faq"], ["Safety", "/contact"]].map(([l, t]) => (
                 <Link key={l} to={t} style={{ fontSize: 13, color: "var(--text)", transition: "color 0.2s" }}
                   onMouseEnter={e => e.target.style.color = "var(--primary)"}
                   onMouseLeave={e => e.target.style.color = "var(--text)"}
