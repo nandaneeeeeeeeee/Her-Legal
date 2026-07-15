@@ -22,6 +22,7 @@ class AuthService {
 
         const verificationCode = Math.floor(1000 + Math.random() * 9000).toString();
         const verificationCodeExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+        const emailConfigured = Boolean(process.env.GMAIL_USER && process.env.GMAIL_APP_PASS);
 
         const user = await User.create({
             username,
@@ -29,10 +30,14 @@ class AuthService {
             phone,
             password,
             image: image || null,
-            isVerified: false,
-            verificationCode,
-            verificationCodeExpires,
+            isVerified: !emailConfigured,
+            verificationCode: emailConfigured ? verificationCode : undefined,
+            verificationCodeExpires: emailConfigured ? verificationCodeExpires : undefined,
         });
+
+        if (!emailConfigured) {
+            return user;
+        }
 
         const emailBody = `
     <div style="text-align: center; font-family: Arial, sans-serif;">
