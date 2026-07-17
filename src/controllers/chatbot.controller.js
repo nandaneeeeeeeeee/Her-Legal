@@ -9,10 +9,14 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 export const chatWithAI = async (req, res) => {
   try {
     const { message, userId, conversationId, language } = req.body;
+    const detectedLang = language || req.language || 'en';
 
-    const languageHint = language === 'ne'
-      ? 'When answering, reply in Nepali using Devanagari script.'
-      : 'When answering, reply in English.';
+    const languageHint = detectedLang === 'ne'
+      ? `The user may write in Nepali (Devanagari script like नमस्ते), romanized Nepali (Nepali words in English alphabet like "mero naam", "kasto cha", "malai maddat chahiyo"), or English. Detect the language or script of the user's message and ALWAYS respond in the same style:
+- If the user writes in Devanagari script → respond in Devanagari script
+- If the user writes in romanized Nepali (Latin script with Nepali words) → respond in romanized Nepali
+- If the user writes in English → respond in English`
+      : 'Respond in English.';
 
     const completion = await groq.chat.completions.create({
       messages: [

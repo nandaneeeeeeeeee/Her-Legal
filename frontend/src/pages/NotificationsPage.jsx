@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Bell, CheckCheck, Trash2, Loader, ArrowLeft, MessageCircle, Heart, FileText, AlertCircle } from "lucide-react";
 import { getNotifications, markAsRead, deleteNotification } from "../api/notifications";
+import { useLanguage } from "../LanguageContext";
 import "../pages/Auth.css";
 
 const ICONS = {
@@ -13,6 +14,7 @@ const ICONS = {
 };
 
 export default function NotificationsPage() {
+  const { t } = useLanguage();
   const [notifs, setNotifs] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -46,10 +48,10 @@ export default function NotificationsPage() {
 
   const timeAgo = (date) => {
     const sec = (Date.now() - new Date(date).getTime()) / 1000;
-    if (sec < 60) return 'just now';
-    if (sec < 3600) return `${Math.floor(sec / 60)}m ago`;
-    if (sec < 86400) return `${Math.floor(sec / 3600)}h ago`;
-    return `${Math.floor(sec / 86400)}d ago`;
+    if (sec < 60) return t("common.justNow");
+    if (sec < 3600) return `${Math.floor(sec / 60)}${t("common.mAgo")}`;
+    if (sec < 86400) return `${Math.floor(sec / 3600)}${t("common.hAgo")}`;
+    return `${Math.floor(sec / 86400)}${t("common.dAgo")}`;
   };
 
   if (loading) {
@@ -61,14 +63,14 @@ export default function NotificationsPage() {
       <div style={{ maxWidth: 600, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
           <div>
-            <Link to="/dashboard" className="auth-link" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, marginBottom: 8 }}>
-              <ArrowLeft size={14} /> Dashboard
+              <Link to="/dashboard" className="auth-link" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, marginBottom: 8 }}>
+              <ArrowLeft size={14} /> {t("common.dashboard")}
             </Link>
-            <h1 style={{ fontSize: 24 }}>Notifications</h1>
+            <h1 style={{ fontSize: 24 }}>{t("notificationsPage.title")}</h1>
           </div>
           {unreadCount > 0 && (
             <button className="btn btn-ghost" onClick={handleMarkAllRead} style={{ height: 36, fontSize: 13 }}>
-              <CheckCheck size={14} /> Mark all read
+              <CheckCheck size={14} /> {t("notificationsPage.markAllRead")}
             </button>
           )}
         </div>
@@ -76,7 +78,7 @@ export default function NotificationsPage() {
         {notifs.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 60, color: 'var(--text-muted)' }}>
             <Bell size={40} style={{ opacity: 0.3, marginBottom: 12 }} />
-            <p>No notifications yet</p>
+            <p>{t("notificationsPage.empty")}</p>
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>

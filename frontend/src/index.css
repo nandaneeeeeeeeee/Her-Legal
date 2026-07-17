@@ -21,8 +21,8 @@
   --radius-md: 16px;
   --radius-lg: 20px;
   --radius-xl: 24px;
-  --font-display: 'DM Serif Display', Georgia, serif;
-  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-display: 'Manrope', 'Noto Sans Devanagari', system-ui, sans-serif;
+  --font-body: 'Manrope', 'Noto Sans Devanagari', system-ui, sans-serif;
   --max-width: 1200px;
 
   font-family: var(--font-body);

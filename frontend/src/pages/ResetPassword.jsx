@@ -2,9 +2,11 @@ import { useState } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { Loader, ArrowLeft } from "lucide-react";
 import { resetPassword } from "../api/auth";
+import { useLanguage } from "../LanguageContext";
 import "./Auth.css";
 
 export default function ResetPassword() {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const email = searchParams.get('email') || "";
@@ -18,10 +20,10 @@ export default function ResetPassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (form.newPassword !== form.confirmPassword) {
-      setError("Passwords do not match");
+      setError(t("settingsSecurity.passwordsMismatch"));
       return;
     }
-    if (!email) { setError("No email provided"); return; }
+    if (!email) { setError(t("auth.noEmail")); return; }
     setError("");
     setLoading(true);
     try {
@@ -29,7 +31,7 @@ export default function ResetPassword() {
       setSuccess(true);
       setTimeout(() => navigate("/auth/login"), 2000);
     } catch (err) {
-      setError(err.message || "Reset failed");
+      setError(err.message || t("auth.resetFailed"));
     } finally {
       setLoading(false);
     }
@@ -39,19 +41,19 @@ export default function ResetPassword() {
     <div className="auth-page">
       <div className="auth-card">
         <button className="auth-back" onClick={() => navigate("/auth/login")}>
-          <ArrowLeft size={16} /> Back to login
+          <ArrowLeft size={16} /> {t("auth.backToLogin")}
         </button>
 
         {!success ? (
           <>
-            <h1>Enter reset code</h1>
+            <h1>{t("auth.enterResetCode")}</h1>
             <p className="auth-subtitle">
-              Enter the 4-digit code sent to <strong>{email || "your email"}</strong>
+              {t("auth.resetCodeSent")} <strong>{email || t("auth.yourEmail")}</strong>
             </p>
             {error && <div className="auth-error">{error}</div>}
             <form onSubmit={handleSubmit}>
               <div className="auth-field">
-                <label>Reset code</label>
+                <label>{t("auth.resetCode")}</label>
                 <input
                   className="auth-input"
                   type="text"
@@ -65,23 +67,23 @@ export default function ResetPassword() {
                 />
               </div>
               <div className="auth-field">
-                <label>New password</label>
-                <input className="auth-input" type="password" placeholder="At least 6 characters" value={form.newPassword} onChange={update('newPassword')} required minLength={6} />
+                <label>{t("settingsSecurity.newPassword")}</label>
+                <input className="auth-input" type="password" placeholder={t("settingsSecurity.passwordPlaceholder")} value={form.newPassword} onChange={update('newPassword')} required minLength={6} />
               </div>
               <div className="auth-field">
-                <label>Confirm new password</label>
-                <input className="auth-input" type="password" placeholder="Repeat your password" value={form.confirmPassword} onChange={update('confirmPassword')} required minLength={6} />
+                <label>{t("settingsSecurity.confirmPassword")}</label>
+                <input className="auth-input" type="password" placeholder={t("auth.repeatPassword")} value={form.confirmPassword} onChange={update('confirmPassword')} required minLength={6} />
               </div>
               <button className="auth-submit" type="submit" disabled={loading}>
-                {loading ? <><Loader size={16} className="spin" /> Resetting...</> : "Reset password"}
+                {loading ? <><Loader size={16} className="spin" /> {t("auth.resetting")}</> : t("auth.resetPassword")}
               </button>
             </form>
           </>
         ) : (
           <>
-            <div className="auth-success">Password reset successfully! Redirecting to login...</div>
+            <div className="auth-success">{t("auth.resetSuccess")}</div>
             <div className="auth-footer" style={{ marginTop: 16 }}>
-              <Link to="/auth/login" className="auth-link">Sign in</Link>
+              <Link to="/auth/login" className="auth-link">{t("auth.signInAction")}</Link>
             </div>
           </>
         )}

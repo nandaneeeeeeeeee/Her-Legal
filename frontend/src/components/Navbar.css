@@ -324,34 +324,6 @@
   flex-shrink: 0;
 }
 
-.nav-lang-toggle {
-  display: flex;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.nav-lang-btn {
-  padding: 4px 10px;
-  font-size: 0.72rem;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: all 0.15s;
-  font-family: inherit;
-  background: transparent;
-  color: #9ca3af;
-}
-
-.nav-lang-btn.active {
-  background: #C8102E;
-  color: #fff;
-}
-
-.nav-lang-btn:not(.active):hover {
-  color: #374151;
-}
-
 /* ─── AUTH BUTTONS ─── */
 .nav-auth-btn {
   display: inline-flex;

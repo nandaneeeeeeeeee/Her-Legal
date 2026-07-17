@@ -5,6 +5,7 @@ import {
   ArrowLeft, Loader, Download, Save, Eye, EyeOff, Plus, ChevronRight, Trash2
 } from "lucide-react";
 import { getTemplates, generateDocument, saveDocument, getDocuments, deleteDocument } from "../api/documents";
+import { useLanguage } from "../LanguageContext";
 import "../pages/Auth.css";
 import "./Documents.css";
 
@@ -13,6 +14,7 @@ const ICON_MAP = {
 };
 
 export default function Documents() {
+  const { t, lang } = useLanguage();
   const navigate = useNavigate();
   const [view, setView] = useState('list'); // list | create | preview
   const [templates, setTemplates] = useState([]);
@@ -63,11 +65,11 @@ export default function Documents() {
     setError("");
     setLoading(true);
     try {
-      const data = await generateDocument(selectedType.id, formData);
+      const data = await generateDocument(selectedType.id, formData, lang);
       setResult(data.data);
       setView('preview');
     } catch (err) {
-      setError(err.message || "Generation failed");
+      setError(err.message || t("documents.generationFailed"));
     } finally {
       setLoading(false);
     }
@@ -81,7 +83,7 @@ export default function Documents() {
       setSaved(true);
       loadDocuments();
     } catch (err) {
-      setError(err.message || "Save failed");
+      setError(err.message || t("documents.saveFailed"));
     } finally {
       setSaving(false);
     }
@@ -99,7 +101,7 @@ export default function Documents() {
   };
 
   const handleDelete = async (id) => {
-    if (!confirm('Delete this document?')) return;
+    if (!confirm(t("documents.deleteConfirm"))) return;
     try {
       await deleteDocument(id);
       loadDocuments();
@@ -116,7 +118,7 @@ export default function Documents() {
       <div className="doc-page">
         <div className="doc-card" style={{ maxWidth: 640 }}>
           <button className="auth-back" onClick={() => { setView('list'); setSelectedType(null); }}>
-            <ArrowLeft size={16} /> Templates
+            <ArrowLeft size={16} /> {t("documents.templates")}
           </button>
           <div className="doc-tpl-header">
             <div className="doc-tpl-icon">{templateIcon(selectedType.icon)}</div>
@@ -153,7 +155,7 @@ export default function Documents() {
           </div>
 
           <button className="auth-submit" onClick={handleGenerate} disabled={loading}>
-            {loading ? <><Loader size={16} className="spin" /> Generating...</> : <><FileText size={16} /> Generate Document</>}
+            {loading ? <><Loader size={16} className="spin" /> {t("documents.generating")}</> : <><FileText size={16} /> {t("documents.generate")}</>}
           </button>
         </div>
       </div>
@@ -165,21 +167,21 @@ export default function Documents() {
       <div className="doc-page">
         <div className="doc-card" style={{ maxWidth: 720 }}>
           <button className="auth-back" onClick={() => { setView('create'); setResult(null); setSaved(false); }}>
-            <ArrowLeft size={16} /> Edit form
+            <ArrowLeft size={16} /> {t("documents.editForm")}
           </button>
 
           <div className="doc-preview-header">
             <h1 style={{ fontSize: 24 }}>{result.title}</h1>
             <div className="doc-preview-actions">
               <button className="btn btn-secondary" onClick={handleDownload} style={{ height: 36 }}>
-                <Download size={14} /> Download
+                <Download size={14} /> {t("documents.download")}
               </button>
               {saved ? (
-                <span className="doc-saved-badge"><Save size={14} /> Saved</span>
+                <span className="doc-saved-badge"><Save size={14} /> {t("common.saved")}</span>
               ) : (
                 <button className="btn btn-primary" onClick={handleSave} disabled={saving} style={{ height: 36 }}>
                   {saving ? <Loader size={14} className="spin" /> : <Save size={14} />}
-                  Save
+                  {t("common.save")}
                 </button>
               )}
             </div>
@@ -204,14 +206,14 @@ export default function Documents() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32 }}>
           <div>
             <Link to="/dashboard" className="auth-link" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, marginBottom: 8 }}>
-              <ArrowLeft size={14} /> Dashboard
+              <ArrowLeft size={14} /> {t("common.dashboard")}
             </Link>
-            <h1 style={{ fontSize: 24 }}>Legal Documents</h1>
-            <p className="auth-subtitle">Generate, save, and download legal documents.</p>
+            <h1 style={{ fontSize: 24 }}>{t("documents.title")}</h1>
+            <p className="auth-subtitle">{t("documents.subtitle")}</p>
           </div>
         </div>
 
-        <h2 className="doc-section-title">Document Templates</h2>
+        <h2 className="doc-section-title">{t("documents.documentTemplates")}</h2>
         <div className="doc-templates-grid">
           {templates.map(tpl => (
             <button key={tpl.id} className="doc-template-card" onClick={() => selectTemplate(tpl)}>
@@ -223,11 +225,11 @@ export default function Documents() {
           ))}
         </div>
 
-        <h2 className="doc-section-title" style={{ marginTop: 48 }}>Saved Documents</h2>
+        <h2 className="doc-section-title" style={{ marginTop: 48 }}>{t("documents.savedDocuments")}</h2>
         {docs.length === 0 ? (
           <div className="doc-empty">
             <FileText size={32} />
-            <p>No saved documents yet. Generate one above.</p>
+            <p>{t("documents.noSaved")}</p>
           </div>
         ) : (
           <div className="doc-saved-list">

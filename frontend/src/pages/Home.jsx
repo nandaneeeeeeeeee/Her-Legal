@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "../LanguageContext";
 import {
   ArrowRight, Sparkles, Shield, Lock, MessageCircle,
   Search, Heart, Phone, BookOpen, Scale, MapPin,
@@ -79,6 +80,7 @@ const RESPONSES = {
 };
 
 function HeroChat() {
+  const { t } = useLanguage();
   const [question, setQuestion] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -118,14 +120,14 @@ function HeroChat() {
       <div className="hero-chat-header">
         <span className="hero-chat-dot" />
         <Bot size={14} />
-        <span>Saathi \u2014 AI Legal Assistant</span>
-        <span className="hero-chat-status">Online</span>
+        <span>{t("home.ai.headerTitle")}</span>
+        <span className="hero-chat-status">{t("home.ai.online")}</span>
       </div>
       <div className="hero-chat-body" ref={chatRef}>
         {messages.length === 0 ? (
           <div className="hero-chat-welcome">
             <div className="hero-chat-welcome-icon"><Bot size={32} /></div>
-            <p>Ask me anything about Nepali law.</p>
+            <p>{t("home.ai.welcomeMsg")}</p>
             <div className="hero-chat-prompts">
               {DEMO_QUESTIONS.map((q, i) => (
                 <button key={i} className="hero-chat-prompt"
@@ -145,7 +147,7 @@ function HeroChat() {
                   ))}
                   {msg.role === "assistant" && i === messages.length - 1 && !isTyping && (
                     <div className="hero-chat-bubble-actions">
-                      {["Save Answer", "Generate Document", "Share"].map((a, j) => (
+                      {[t("home.ai.saveAnswer"), t("home.ai.generateDoc"), t("home.ai.share")].map((a, j) => (
                         <button key={j} className="hero-chat-bubble-action">
                           {a} <ArrowRight size={10} />
                         </button>
@@ -182,6 +184,7 @@ function HeroChat() {
 
 /* ─── 2. REALITY — editorial full-width ─── */
 function RealitySection() {
+  const { t } = useLanguage();
   return (
     <section className="reality-sec">
       <div className="reality-image-wrap">
@@ -192,22 +195,20 @@ function RealitySection() {
       <div className="container">
         <div className="reality-content">
           <Reveal>
-            <span className="section-label light-label">The Reality</span>
-            <h2>Most women in Nepal face legal challenges alone.</h2>
+            <span className="section-label light-label">{t("home.reality.label")}</span>
+            <h2>{t("home.reality.title")}</h2>
             <p className="reality-p">
-              The law is written in language that requires years to understand.
-              Lawyers charge fees most cannot afford. And asking for help often
-              means risking judgment.
+              {t("home.reality.desc")}
             </p>
           </Reveal>
           <Reveal delay="reveal-d1" className="reality-stats-row">
             <div className="reality-stat-badge">
               <strong>73%</strong>
-              <span>of Nepali women are unaware of their legal rights</span>
+              <span>{t("home.reality.stat1")}</span>
             </div>
             <div className="reality-stat-badge">
               <strong>68%</strong>
-              <span>never seek legal help due to cost or fear of judgment</span>
+              <span>{t("home.reality.stat2")}</span>
             </div>
           </Reveal>
         </div>
@@ -218,6 +219,7 @@ function RealitySection() {
 
 /* ─── 3. AI ASSISTANT — product split ─── */
 function AISection() {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   return (
     <section className="ai-sec">
@@ -227,45 +229,44 @@ function AISection() {
             <div className="ai-mockup">
               <div className="ai-mockup-top">
                 <div className="ai-mockup-dots"><span /><span /><span /></div>
-                <span>Saathi AI</span>
+                <span>{t("home.ai.headerTitle")}</span>
               </div>
               <div className="ai-mockup-body">
                 <div className="ai-msg-user">
                   <div className="ai-msg-bubble user-msg">
-                    What are my rights during divorce?
+                    {t("home.ai.mockupQuestion")}
                   </div>
                 </div>
                 <div className="ai-msg-assistant">
                   <div className="ai-msg-bubble assistant-msg">
-                    <div className="ai-source">Muluki Civil Code, 2074</div>
+                    <div className="ai-source">{t("home.ai.mockupSource")}</div>
                     <p>Under Nepali law, both spouses have equal rights to property acquired during marriage. You are entitled to:</p>
                     <ul>
-                      <li>Equal division of jointly acquired property</li>
-                      <li>Alimony if you are financially dependent</li>
-                      <li>Child custody based on the child's best interest</li>
+                      <li>{t("home.ai.mockupItem1")}</li>
+                      <li>{t("home.ai.mockupItem2")}</li>
+                      <li>{t("home.ai.mockupItem3")}</li>
                     </ul>
                   </div>
                 </div>
               </div>
               <div className="ai-mockup-input">
-                <span>Ask a follow-up...</span>
+                <span>{t("home.ai.mockupPlaceholder")}</span>
                 <Send size={13} />
               </div>
             </div>
           </Reveal>
           <Reveal delay="reveal-d1" className="ai-text-side">
-            <span className="section-label">AI Legal Assistant</span>
-            <h2>You ask. It answers.<br />In plain language.</h2>
+            <span className="section-label">{t("home.ai.label")}</span>
+            <h2>{t("home.ai.title")}</h2>
             <p className="ai-desc">
-              Trained on Nepal's constitution, civil code, labour act, and 30+ legal documents.
-              Your personal legal guide, available anytime, completely free.
+              {t("home.ai.desc")}
             </p>
             <div className="ai-features">
               {[
-                { icon: <Check size={14} />, text: "Instant answers, 24/7" },
-                { icon: <Check size={14} />, text: "Nepali & English support" },
-                { icon: <Check size={14} />, text: "Sources cited for every claim" },
-                { icon: <Check size={14} />, text: "100% anonymous" },
+                { icon: <Check size={14} />, text: t("home.ai.feature1") },
+                { icon: <Check size={14} />, text: t("home.ai.feature2") },
+                { icon: <Check size={14} />, text: t("home.ai.feature3") },
+                { icon: <Check size={14} />, text: t("home.ai.feature4") },
               ].map((f, i) => (
                 <div key={i} className="ai-feature-row">
                   <span className="ai-check">{f.icon}</span>
@@ -274,7 +275,7 @@ function AISection() {
               ))}
             </div>
             <button className="btn btn-primary" onClick={() => navigate("/chat")}>
-              Try the AI Assistant <ArrowRight size={16} />
+              {t("home.ai.cta")} <ArrowRight size={16} />
             </button>
           </Reveal>
         </div>
@@ -305,13 +306,14 @@ const BENTO = [
 ];
 
 function BentoSection() {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   return (
     <section className="bento-sec">
       <div className="container">
         <Reveal className="bento-head">
-          <span className="section-label">Legal Topics</span>
-          <h2>Across every area of life.<br />Know your rights in each.</h2>
+          <span className="section-label">{t("home.topicsSection.label")}</span>
+          <h2>{t("home.topicsSection.title")}</h2>
         </Reveal>
         <div className="bento-grid">
           {BENTO.map((item, i) => (
@@ -346,33 +348,33 @@ function BentoSection() {
 
 /* ─── 5. DOCUMENTS — product showcase ─── */
 function DocumentSection() {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   return (
     <section className="doc-sec">
       <div className="container">
         <div className="doc-layout">
           <Reveal className="doc-text-side">
-            <span className="section-label">Document Generator</span>
-            <h2>One click.<br />A legal document.<br />            <span className="text-accent">Ready to file.</span></h2>
+            <span className="section-label">{t("home.documents.label")}</span>
+            <h2>{t("home.documents.title")}</h2>
             <p className="doc-desc">
-              From complaint letters to affidavits. Answer simple questions, and the AI
-              drafts a complete, properly formatted legal document.
+              {t("home.documents.desc")}
             </p>
             <div className="doc-types">
-              {["Complaint Letter","Legal Notice","Affidavit",
-                "Agreement","Application","Demand Letter"].map((t, i) => (
-                <span key={i} className="doc-type-tag">{t}</span>
+              {[t("home.documents.type1"), t("home.documents.type2"), t("home.documents.type3"),
+                t("home.documents.type4"), t("home.documents.type5"), t("home.documents.type6")].map((dt, i) => (
+                <span key={i} className="doc-type-tag">{dt}</span>
               ))}
             </div>
             <button className="btn btn-primary" onClick={() => navigate("/documents")}>
-              Generate a Document <ArrowRight size={16} />
+              {t("home.documents.cta")} <ArrowRight size={16} />
             </button>
           </Reveal>
           <Reveal delay="reveal-d1" className="doc-visual-side">
             <div className="doc-preview-card">
               <div className="doc-preview-top">
                 <FileText size={15} />
-                <span>Complaint Letter Draft</span>
+                <span>{t("home.documents.previewTitle")}</span>
               </div>
               <div className="doc-preview-content">
                 <div className="doc-line" /><div className="doc-line short" />
@@ -384,7 +386,7 @@ function DocumentSection() {
               </div>
               <div className="doc-preview-foot">
                 <Check size={11} />
-                Generated by AI \u2014 ready to review and download
+                {t("home.documents.previewFootnote")}
               </div>
             </div>
           </Reveal>
@@ -411,6 +413,7 @@ const ARTICLES = [
 ];
 
 function KnowledgeSection() {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const filtered = ARTICLES.filter(a =>
@@ -421,13 +424,13 @@ function KnowledgeSection() {
     <section className="know-sec">
       <div className="container">
         <Reveal className="know-head">
-          <span className="section-label">Knowledge Hub</span>
-          <h2>Learn your rights.<br />On your own time.</h2>
+          <span className="section-label">{t("home.knowledge.label")}</span>
+          <h2>{t("home.knowledge.title")}</h2>
         </Reveal>
         <Reveal delay="reveal-d1">
           <div className="know-search-bar">
             <Search size={15} />
-            <input type="text" placeholder="Search articles..."
+            <input type="text" placeholder={t("home.knowledge.searchPlaceholder")}
               value={search} onChange={e => setSearch(e.target.value)} />
           </div>
         </Reveal>
@@ -461,6 +464,7 @@ const STORIES = [
 ];
 
 function CommunitySection() {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   return (
     <section className="comm-sec">
@@ -469,20 +473,19 @@ function CommunitySection() {
         <div className="comm-photo-overlay" />
         <div className="comm-photo-stat">
           <strong>2,400+</strong>
-          <span>women in our community</span>
+          <span>{t("home.communitySection.stat")}</span>
         </div>
       </div>
       <div className="container">
         <div className="comm-content-row">
           <Reveal className="comm-text">
-            <span className="section-label">Community</span>
-            <h2>You're not alone.<br />Thousands have shared.</h2>
+            <span className="section-label">{t("home.communitySection.label")}</span>
+            <h2>{t("home.communitySection.title")}</h2>
             <p className="comm-desc">
-              A safe space to share anonymously, ask questions, and support
-              other women facing legal challenges. No judgment. Just understanding.
+              {t("home.communitySection.desc")}
             </p>
             <button className="btn btn-primary" onClick={() => navigate("/community")}>
-              Join the Community <ArrowRight size={16} />
+              {t("home.communitySection.cta")} <ArrowRight size={16} />
             </button>
           </Reveal>
           <Reveal delay="reveal-d1" className="comm-cards-col">
@@ -510,6 +513,7 @@ function CommunitySection() {
 
 /* ─── 8. STATS ─── */
 function StatsSection() {
+  const { t } = useLanguage();
   const [r1, u] = useCounter(10000);
   const [r2, a] = useCounter(5000);
   const [r3, d] = useCounter(1200);
@@ -519,10 +523,10 @@ function StatsSection() {
       <div className="container">
         <div className="stats-row">
           {[
-            { ref: r1, val: u, label: "Active Users", suff: "+" },
-            { ref: r2, val: a, label: "AI Answers", suff: "+" },
-            { ref: r3, val: d, label: "Documents Generated", suff: "+" },
-            { ref: r4, val: p, label: "Community Stories", suff: "+" },
+            { ref: r1, val: u, label: t("home.stats.activeUsers"), suff: "+" },
+            { ref: r2, val: a, label: t("home.stats.aiAnswers"), suff: "+" },
+            { ref: r3, val: d, label: t("home.stats.documentsGenerated"), suff: "+" },
+            { ref: r4, val: p, label: t("home.stats.communityStories"), suff: "+" },
           ].map((s, i) => (
             <React.Fragment key={i}>
               <div className="stats-cell" ref={s.ref}>
@@ -540,6 +544,7 @@ function StatsSection() {
 
 /* ─── 9. EMERGENCY ─── */
 function EmergencySection() {
+  const { t } = useLanguage();
   return (
     <section className="emergency-sec">
       <div className="emergency-bg-img">
@@ -550,17 +555,17 @@ function EmergencySection() {
         <Reveal className="emergency-inner">
           <div className="emergency-heart-icon"><Heart size={32} /></div>
           <span className="section-label" style={{ color: '#F5B301', background: 'rgba(245,179,1,0.14)' }}>
-            Need Immediate Help?
+            {t("home.emergency.label")}
           </span>
-          <h2>You are not alone.<br />Help is one call away.</h2>
+          <h2>{t("home.emergency.title")}</h2>
           <p className="emergency-sub">
-            Free, confidential support available 24/7. Trained professionals are ready to listen.
+            {t("home.emergency.desc")}
           </p>
           <div className="emergency-nums">
             {[
-              { label: "Women's Helpline", num: "1145", prime: true },
-              { label: "Police Emergency", num: "100" },
-              { label: "Legal Aid Commission", num: "16600178585" },
+              { label: t("home.emergency.womensHelpline"), num: "1145", prime: true },
+              { label: t("home.emergency.policeEmergency"), num: "100" },
+              { label: t("home.emergency.legalAid"), num: "16600178585" },
             ].map((e, i) => (
               <a key={i} href={`tel:${e.num}`}
                 className={`emergency-btn${e.prime ? ' prime' : ''}`}>
@@ -581,46 +586,40 @@ function EmergencySection() {
 
 /* ─── 10. TRUST ─── */
 function TrustSection() {
+  const { t } = useLanguage();
   const [open, setOpen] = useState(null);
   return (
     <section className="trust-sec">
       <div className="container">
         <Reveal className="trust-head">
-          <span className="section-label">Why Her Legal</span>
-          <h2>Built on trust.<br />            <span className="text-accent">Guaranteed by design.</span></h2>
+          <span className="section-label">{t("home.trust.label")}</span>
+          <h2>{t("home.trust.title")}</h2>
         </Reveal>
         <div className="trust-split">
           <div className="trust-cards-col">
             {[
-              { icon: <Fingerprint size={20} />, c: "#059669", t: "Complete Anonymity",
-                d: "No personal information required. Your identity is never stored or shared." },
-              { icon: <Lock size={20} />, c: "#2563EB", t: "End-to-End Privacy",
-                d: "All conversations encrypted. We don't track, log, or sell your data." },
-              { icon: <Globe size={20} />, c: "#C8102E", t: "Built for Nepal",
-                d: "Every answer references actual Nepali legislation. From the Constitution to the Civil Code." },
-              { icon: <Feather size={20} />, c: "#7C3AED", t: "Free for Everyone",
-                d: "All features are completely free. No hidden charges, no premium tiers." },
+              { icon: <Fingerprint size={20} />, c: "#059669", title: t("home.trust.feature1Title"), desc: t("home.trust.feature1Desc") },
+              { icon: <Lock size={20} />, c: "#2563EB", title: t("home.trust.feature2Title"), desc: t("home.trust.feature2Desc") },
+              { icon: <Globe size={20} />, c: "#C8102E", title: t("home.trust.feature3Title"), desc: t("home.trust.feature3Desc") },
+              { icon: <Feather size={20} />, c: "#7C3AED", title: t("home.trust.feature4Title"), desc: t("home.trust.feature4Desc") },
             ].map((g, i) => (
               <Reveal key={i} delay={`reveal-d${i + 1}`} className="trust-card"
                 style={{ '--accent': g.c }}>
                 <div className="trust-card-icon" style={{ color: g.c, background: `${g.c}10` }}>
                   {g.icon}
                 </div>
-                <h3>{g.t}</h3>
-                <p>{g.d}</p>
+                <h3>{g.title}</h3>
+                <p>{g.desc}</p>
               </Reveal>
             ))}
           </div>
           <Reveal delay="reveal-d2" className="trust-faq-col">
             <div className="trust-faq-box">
-              <h3>Common questions</h3>
+              <h3>{t("home.trust.faqTitle")}</h3>
               {[
-                { q: "Is my identity really protected?",
-                  a: "Absolutely. All interactions are completely anonymous. We don't store personal information, and your identity is never revealed to other users." },
-                { q: "How accurate is the AI?",
-                  a: "Our AI is trained on 30+ Nepali legal texts including the Constitution, Muluki Civil Code, Labour Act, and Domestic Violence Act. Always verify critical decisions with a qualified lawyer." },
-                { q: "Can I use the site in Nepali?",
-                  a: "Yes. The platform supports both English and Nepali. Ask questions in either language and receive answers in the same language." },
+                { q: t("home.trust.faq1Q"), a: t("home.trust.faq1A") },
+                { q: t("home.trust.faq2Q"), a: t("home.trust.faq2A") },
+                { q: t("home.trust.faq3Q"), a: t("home.trust.faq3A") },
               ].map((f, idx) => (
                 <div key={idx} className={`trust-faq${open === idx ? ' open' : ''}`}>
                   <button className="trust-faq-q" onClick={() => setOpen(open === idx ? null : idx)}>
@@ -642,6 +641,7 @@ function TrustSection() {
 
 /* ─── 11. CTA ─── */
 function CTASection() {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   return (
     <section className="cta-sec">
@@ -652,18 +652,18 @@ function CTASection() {
       <div className="container" style={{ textAlign: 'center', position: 'relative', zIndex: 2 }}>
         <Reveal>
           <h2 className="cta-title">
-            Legal guidance.<br />
-            <span className="text-accent">Made understandable.</span>
+            {t("home.cta.title")}<br />
+            <span className="text-accent">{t("home.cta.accent")}</span>
           </h2>
         </Reveal>
         <Reveal delay="reveal-d1">
           <p className="cta-sub">
-            Start with Her Legal. It's free, anonymous, and built for every woman in Nepal.
+            {t("home.cta.desc")}
           </p>
         </Reveal>
         <Reveal delay="reveal-d2">
           <button className="btn btn-primary cta-btn" onClick={() => navigate("/chat")}>
-            Get Started <ArrowRight size={18} />
+            {t("home.cta.cta")} <ArrowRight size={18} />
           </button>
         </Reveal>
       </div>
@@ -676,6 +676,7 @@ function CTASection() {
    ════════════════════════════════════════════ */
 export default function Home() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   return (
     <div className="home">
@@ -686,31 +687,29 @@ export default function Home() {
         <div className="container hero-grid">
           <Reveal className="hero-text-col">
             <div className="hero-badge">
-              <Sparkles size={12} /> AI-Powered Legal Guidance
+              <Sparkles size={12} /> {t("home.hero.badge")}
             </div>
             <h1 className="hero-title">
-              Know your<br />rights.
-              <span className="hero-title-accent">Before life asks.</span>
+              {t("home.hero.title")}
+              <span className="hero-title-accent">{t("home.hero.accent")}</span>
             </h1>
             <p className="hero-sub">
-              Understand Nepali law in plain language. Get instant answers,
-              generate legal documents, and take action \u2014 all in one place,
-              completely anonymous.
+              {t("home.hero.subtitle")}
             </p>
             <div className="hero-actions">
               <button className="btn btn-primary hero-btn"
                 onClick={() => navigate("/chat")}>
-                Start AI Assistant <ArrowRight size={16} />
+                {t("home.hero.startAI")} <ArrowRight size={16} />
               </button>
               <button className="hero-btn-outline"
                 onClick={() => navigate("/community")}>
-                Join Community
+                {t("home.hero.joinCommunity")}
               </button>
             </div>
             <div className="hero-meta">
-              <span><Shield size={13} /> 100% Anonymous</span>
-              <span><Lock size={13} /> Private &amp; Secure</span>
-              <span><MapPin size={13} /> Nepal-Specific</span>
+              <span><Shield size={13} /> {t("home.hero.anonymousShield")}</span>
+              <span><Lock size={13} /> {t("home.hero.privateSecure")}</span>
+              <span><MapPin size={13} /> {t("home.hero.nepalSpecific")}</span>
             </div>
           </Reveal>
           <Reveal delay="reveal-d1" className="hero-visual-col">

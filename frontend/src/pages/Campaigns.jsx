@@ -1,14 +1,17 @@
+import { useLanguage } from "../LanguageContext";
+
 function Campaigns() {
+  const { t } = useLanguage();
   return (
     <div style={{ padding: "120px 24px 80px", maxWidth: "var(--max-width)", margin: "0 auto", width: "100%" }}>
-      <span className="section-label">Take Action</span>
-      <h1 style={{ marginBottom: 48 }}>Campaigns & Programs</h1>
+      <span className="section-label">{t("campaigns.label")}</span>
+      <h1 style={{ marginBottom: 48 }}>{t("campaigns.title")}</h1>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 24 }}>
         {[
-          { title: "Know Your Rights", tag: "Workshop", desc: "Free legal literacy workshops across all seven provinces of Nepal, covering domestic violence, property rights, and workplace protections." },
-          { title: "Safe Voices", tag: "Campaign", desc: "An anonymous storytelling campaign that empowers women to share their experiences and find solidarity in community." },
-          { title: "Sathi Helpline", tag: "Service", desc: "A confidential helpline connecting women with legal advisors, counselors, and emergency support services." },
+          { title: t("campaigns.items.0.title"), tag: t("campaigns.items.0.tag"), desc: t("campaigns.items.0.desc") },
+          { title: t("campaigns.items.1.title"), tag: t("campaigns.items.1.tag"), desc: t("campaigns.items.1.desc") },
+          { title: t("campaigns.items.2.title"), tag: t("campaigns.items.2.tag"), desc: t("campaigns.items.2.desc") },
         ].map((campaign) => (
           <div key={campaign.title} style={{
             background: "var(--bg-card)", borderRadius: "var(--radius-md)", overflow: "hidden",

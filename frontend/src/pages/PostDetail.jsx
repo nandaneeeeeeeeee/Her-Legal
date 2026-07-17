@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useLanguage } from "../LanguageContext";
 import {
   ArrowLeft, Heart, MessageCircle, Bookmark, Flag,
   Share2, Loader, Send, ThumbsUp, Lightbulb, Smile,
@@ -13,6 +14,7 @@ import "./PostDetail.css";
 export default function PostDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const { user, isAuthenticated } = useAuth();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -95,7 +97,7 @@ export default function PostDetail() {
   };
 
   const handleDelete = async () => {
-    if (!window.confirm('Delete this post?')) return;
+    if (!window.confirm(t("postDetail.deleteConfirm"))) return;
     try {
       await deletePost(id);
       navigate('/community');
@@ -104,10 +106,10 @@ export default function PostDetail() {
 
   const timeAgo = (date) => {
     const sec = (Date.now() - new Date(date).getTime()) / 1000;
-    if (sec < 60) return 'just now';
-    if (sec < 3600) return `${Math.floor(sec / 60)}m ago`;
-    if (sec < 86400) return `${Math.floor(sec / 3600)}h ago`;
-    return `${Math.floor(sec / 86400)}d ago`;
+    if (sec < 60) return t("common.justNow");
+    if (sec < 3600) return `${Math.floor(sec / 60)}${t("common.mAgo")}`;
+    if (sec < 86400) return `${Math.floor(sec / 3600)}${t("common.hAgo")}`;
+    return `${Math.floor(sec / 86400)}${t("common.dAgo")}`;
   };
 
   if (loading) {
@@ -118,16 +120,16 @@ export default function PostDetail() {
 
   const isOwner = user && post.userId?._id === user._id;
   const reactions = [
-    { type: 'helpful', icon: <ThumbsUp size={16} />, label: 'Helpful' },
-    { type: 'supportive', icon: <Smile size={16} />, label: 'Supportive' },
-    { type: 'insightful', icon: <Lightbulb size={16} />, label: 'Insightful' },
+    { type: 'helpful', icon: <ThumbsUp size={16} />, label: t("postDetail.helpful") },
+    { type: 'supportive', icon: <Smile size={16} />, label: t("postDetail.supportive") },
+    { type: 'insightful', icon: <Lightbulb size={16} />, label: t("postDetail.insightful") },
   ];
 
   return (
     <div className="postdetail-page">
       <div className="postdetail-container">
         <button className="auth-back" onClick={() => navigate('/community')}>
-          <ArrowLeft size={16} /> Community
+          <ArrowLeft size={16} /> {t("postDetail.community")}
         </button>
 
         <article className="postdetail-card">
@@ -137,7 +139,7 @@ export default function PostDetail() {
                 {post.isAnonymous ? 'A' : (post.userId?.username?.[0] || 'U')}
               </div>
               <div>
-                <strong>{post.anonymousIdentity || post.userId?.username || 'Anonymous'}</strong>
+                <strong>{post.anonymousIdentity || post.userId?.username || t("common.anonymous")}</strong>
                 <span>{timeAgo(post.createdAt)}</span>
               </div>
             </div>
@@ -178,7 +180,7 @@ export default function PostDetail() {
               onClick={handleSave}
             >
               <Bookmark size={16} />
-              <span>{post.userReacted?.saved ? 'Saved' : 'Save'}</span>
+              <span>{t("postDetail.saves")}</span>
             </button>
           </div>
 
@@ -187,35 +189,35 @@ export default function PostDetail() {
             <div className="postdetail-report">
               <textarea
                 className="create-post-textarea"
-                placeholder="Why are you reporting this? (required)"
+                placeholder={t("postDetail.reportPlaceholder")}
                 value={reportReason}
                 onChange={e => setReportReason(e.target.value)}
                 rows={3}
               />
               <button className="btn btn-primary" style={{ marginTop: 8, background: '#DC2626' }} onClick={handleReport}>
-                Submit report
+                {t("postDetail.submitReport")}
               </button>
             </div>
           )}
 
           {/* Stats bar */}
           <div className="postdetail-stats">
-            <span><Heart size={14} /> {post.reactionCounts?.helpful || 0} helpful</span>
-            <span><MessageCircle size={14} /> {post.commentCount || 0} comments</span>
-            <span><Bookmark size={14} /> {post.saveCount || 0} saves</span>
+            <span><Heart size={14} /> {post.reactionCounts?.helpful || 0} {t("postDetail.helpful")}</span>
+            <span><MessageCircle size={14} /> {post.commentCount || 0} {t("postDetail.comments")}</span>
+            <span><Bookmark size={14} /> {post.saveCount || 0} {t("postDetail.saves")}</span>
           </div>
         </article>
 
         {/* Comments */}
         <div className="postdetail-comments-section">
-          <h2>Comments ({post.commentCount || 0})</h2>
+          <h2>{t("postDetail.comments")} ({post.commentCount || 0})</h2>
 
           {/* Comment form */}
           {isAuthenticated ? (
             <form className="postdetail-comment-form" onSubmit={handleComment}>
               <div className="postdetail-comment-input-wrap">
                 <textarea
-                  placeholder="Share your thoughts..."
+                  placeholder={t("postDetail.commentPlaceholder")}
                   value={commentText}
                   onChange={e => setCommentText(e.target.value)}
                   rows={2}
@@ -225,18 +227,18 @@ export default function PostDetail() {
               <div className="postdetail-comment-actions">
                 <label className="postdetail-comment-anon">
                   <input type="checkbox" checked={commentAnon} onChange={e => setCommentAnon(e.target.checked)} />
-                  Post anonymously
+                  {t("postDetail.postAnonymous")}
                 </label>
                 <button className="btn btn-primary" type="submit" disabled={sending || !commentText.trim()} style={{ height: 36 }}>
                   {sending ? <Loader size={14} className="spin" /> : <Send size={14} />}
-                  <span>Send</span>
+                  <span>{t("postDetail.send")}</span>
                 </button>
               </div>
             </form>
           ) : (
             <div className="postdetail-comment-login">
               <button className="auth-link" onClick={() => { setAuthAction('post'); setShowAuthReq(true); }}>
-                Sign in to comment
+                {t("postDetail.signInToComment")}
               </button>
             </div>
           )}
@@ -244,7 +246,7 @@ export default function PostDetail() {
           {/* Comment list */}
           <div className="postdetail-comments">
             {post.comments?.length === 0 ? (
-              <p className="postdetail-no-comments">No comments yet. Be the first to share your thoughts.</p>
+              <p className="postdetail-no-comments">{t("postDetail.noComments")}</p>
             ) : (
               post.comments?.map(c => (
                 <div key={c._id} className="postdetail-comment">
@@ -253,7 +255,7 @@ export default function PostDetail() {
                       {c.author?.[0] || 'A'}
                     </div>
                     <div>
-                      <strong style={{ fontSize: 13 }}>{c.author || 'Anonymous'}</strong>
+                      <strong style={{ fontSize: 13 }}>{c.author || t("common.anonymous")}</strong>
                       <span style={{ fontSize: 11 }}>{timeAgo(c.createdAt)}</span>
                     </div>
                   </div>

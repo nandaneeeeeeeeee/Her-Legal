@@ -104,6 +104,21 @@ function Navbar() {
               </button>
             )}
 
+            <div className="nav-lang-toggle">
+              <button
+                className={`nav-lang-btn${lang === "en" ? " active" : ""}`}
+                onClick={() => setLanguage("en")}
+              >
+                EN
+              </button>
+              <button
+                className={`nav-lang-btn${lang === "ne" ? " active" : ""}`}
+                onClick={() => setLanguage("ne")}
+              >
+                ने
+              </button>
+            </div>
+
             <div className="nav-divider" />
 
             {user ? (

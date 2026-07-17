@@ -1,14 +1,17 @@
+import { useLanguage } from "../LanguageContext";
+
 function News() {
+  const { t } = useLanguage();
   return (
     <div style={{ padding: "120px 24px 80px", maxWidth: "var(--max-width)", margin: "0 auto", width: "100%" }}>
-      <span className="section-label">Updates</span>
-      <h1 style={{ marginBottom: 48 }}>News & Magazines</h1>
+      <span className="section-label">{t("news.label")}</span>
+      <h1 style={{ marginBottom: 48 }}>{t("news.title")}</h1>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 24 }}>
         {[
-          { title: "New Legal Aid Centers Opening in Province 2", date: "Jun 28, 2026", excerpt: "Five new legal aid centers are opening across Province 2 to provide free legal counsel to women in rural areas." },
-          { title: "Domestic Violence Law Amendments: What You Need to Know", date: "Jun 15, 2026", excerpt: "Recent amendments to domestic violence laws strengthen protections for survivors. Here's a plain-language breakdown." },
-          { title: "Her Legal Reaches 500 Women Helped Milestone", date: "May 30, 2026", excerpt: "We're humbled to share that Her Legal has now supported over 500 women across Nepal with legal guidance and support." },
+          { title: t("news.articles.0.title"), date: t("news.articles.0.date"), excerpt: t("news.articles.0.excerpt") },
+          { title: t("news.articles.1.title"), date: t("news.articles.1.date"), excerpt: t("news.articles.1.excerpt") },
+          { title: t("news.articles.2.title"), date: t("news.articles.2.date"), excerpt: t("news.articles.2.excerpt") },
         ].map((article) => (
           <div key={article.title} style={{
             background: "var(--bg-card)", borderRadius: "var(--radius-md)", padding: 32,

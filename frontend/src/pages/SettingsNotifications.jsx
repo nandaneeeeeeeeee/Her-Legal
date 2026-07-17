@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Loader } from "lucide-react";
 import { useAuth } from "../AuthContext";
+import { useLanguage } from "../LanguageContext";
 import { updatePreferences } from "../api/settings";
 import "../pages/Auth.css";
 import "../pages/Settings.css";
@@ -9,6 +10,7 @@ import "../pages/Settings.css";
 export default function SettingsNotifications() {
   const { user, updateUser } = useAuth();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [prefs, setPrefs] = useState({
     receiveReplies: true,
     receiveNotifications: true,
@@ -32,26 +34,26 @@ export default function SettingsNotifications() {
     try {
       const data = await updatePreferences({ communityPrefs: prefs });
       updateUser(data.data);
-      setSuccess("Preferences saved");
+      setSuccess(t("settingsNotifications.preferencesSaved"));
       setTimeout(() => setSuccess(""), 3000);
     } catch {}
     setLoading(false);
   };
 
   const items = [
-    { key: 'receiveReplies', label: 'Replies', desc: 'Get notified when someone replies to your posts' },
-    { key: 'receiveNotifications', label: 'Community activity', desc: 'Stay updated on community activity' },
-    { key: 'receiveLegalUpdates', label: 'Legal updates', desc: 'Receive updates about Nepali law changes' },
+    { key: 'receiveReplies', label: t("settingsNotifications.replies"), desc: t("settingsNotifications.repliesDesc") },
+    { key: 'receiveNotifications', label: t("settingsNotifications.communityActivity"), desc: t("settingsNotifications.communityActivityDesc") },
+    { key: 'receiveLegalUpdates', label: t("settingsNotifications.legalUpdates"), desc: t("settingsNotifications.legalUpdatesDesc") },
   ];
 
   return (
     <div className="settings-page">
       <div className="settings-card">
         <button className="auth-back" onClick={() => navigate('/dashboard')}>
-          <ArrowLeft size={16} /> Dashboard
+          <ArrowLeft size={16} /> {t("common.dashboard")}
         </button>
-        <h1>Notifications</h1>
-        <p className="auth-subtitle">Manage your notification preferences.</p>
+        <h1>{t("settingsNotifications.title")}</h1>
+        <p className="auth-subtitle">{t("settingsNotifications.subtitle")}</p>
 
         {success && <div className="auth-success">{success}</div>}
 
@@ -68,7 +70,7 @@ export default function SettingsNotifications() {
         </div>
 
         <button className="auth-submit" onClick={handleSave} disabled={loading}>
-          {loading ? <><Loader size={16} className="spin" /> Saving...</> : "Save preferences"}
+          {loading ? <><Loader size={16} className="spin" /> {t("common.saving")}</> : t("settingsNotifications.savePreferences")}
         </button>
       </div>
     </div>

@@ -4,8 +4,8 @@ export async function getTemplates() {
   return api('/documents/templates');
 }
 
-export async function generateDocument(type, formData) {
-  return api('/documents/generate', { method: 'POST', body: { type, formData } });
+export async function generateDocument(type, formData, language) {
+  return api('/documents/generate', { method: 'POST', body: { type, formData, language } });
 }
 
 export async function saveDocument(title, type, content, formData) {

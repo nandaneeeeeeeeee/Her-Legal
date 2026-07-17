@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Loader, Eye, EyeOff, Sparkles } from "lucide-react";
+import { useLanguage } from "../LanguageContext";
 import { createPost } from "../api/community";
 import "./CreatePost.css";
 
@@ -11,6 +12,7 @@ const CATEGORIES = [
 ];
 
 export default function CreatePost() {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [form, setForm] = useState({
     title: "",
@@ -27,7 +29,7 @@ export default function CreatePost() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.title.trim() || !form.text.trim()) {
-      setError("Title and text are required");
+      setError(t("createPost.validationError"));
       return;
     }
     setError("");
@@ -42,7 +44,7 @@ export default function CreatePost() {
       });
       navigate(`/community/${data.data._id}`);
     } catch (err) {
-      setError(err.message || "Failed to create post");
+      setError(err.message || t("createPost.apiError"));
     } finally {
       setLoading(false);
     }
@@ -52,37 +54,37 @@ export default function CreatePost() {
     <div className="create-post-page">
       <div className="create-post-card">
         <button className="auth-back" onClick={() => navigate('/community')}>
-          <ArrowLeft size={16} /> Back to community
+          <ArrowLeft size={16} /> {t("createPost.back")}
         </button>
 
         <div className="create-post-privacy">
           <Sparkles size={16} />
           <span>
             {form.isAnonymous
-              ? "Your identity is hidden. No one will see your name."
-              : "This post will show your username."}
+              ? t("createPost.anonymousHint")
+              : t("createPost.publicHint")}
           </span>
           <button
             className="create-post-toggle-btn"
             onClick={() => setForm(prev => ({ ...prev, isAnonymous: !prev.isAnonymous }))}
           >
             {form.isAnonymous ? <EyeOff size={14} /> : <Eye size={14} />}
-            {form.isAnonymous ? 'Anonymous' : 'Public'}
+            {form.isAnonymous ? t("createPost.anonymous") : t("createPost.public")}
           </button>
         </div>
 
-        <h1>Share your story</h1>
-        <p className="community-subtitle">Your voice matters. Share anonymously or publicly.</p>
+        <h1>{t("createPost.title")}</h1>
+        <p className="community-subtitle">{t("createPost.subtitle")}</p>
 
         {error && <div className="auth-error">{error}</div>}
 
         <form onSubmit={handleSubmit}>
           <div className="create-post-field">
-            <label>Title</label>
+            <label>{t("createPost.titleLabel")}</label>
             <input
               className="auth-input"
               type="text"
-              placeholder="What's on your mind?"
+              placeholder={t("createPost.titlePlaceholder")}
               value={form.title}
               onChange={update('title')}
               required
@@ -91,7 +93,7 @@ export default function CreatePost() {
           </div>
 
           <div className="create-post-field">
-            <label>Category</label>
+            <label>{t("createPost.categoryLabel")}</label>
             <select
               className="auth-input"
               value={form.category}
@@ -102,32 +104,32 @@ export default function CreatePost() {
           </div>
 
           <div className="create-post-field">
-            <label>Your story</label>
+            <label>{t("createPost.storyLabel")}</label>
             <textarea
               className="create-post-textarea"
-              placeholder="Share your experience, ask for advice, or start a discussion..."
+              placeholder={t("createPost.storyPlaceholder")}
               value={form.text}
               onChange={update('text')}
               required
               maxLength={10000}
               rows={8}
             />
-            <span className="create-post-chars">{form.text.length}/10000</span>
+            <span className="create-post-chars">{form.text.length}/{t("createPost.charCount")}</span>
           </div>
 
           <div className="create-post-field">
-            <label>Tags (optional, comma separated)</label>
+            <label>{t("createPost.tagsLabel")}</label>
             <input
               className="auth-input"
               type="text"
-              placeholder="e.g. workplace, harassment, advice"
+              placeholder={t("createPost.tagsPlaceholder")}
               value={form.tags}
               onChange={update('tags')}
             />
           </div>
 
           <button className="auth-submit" type="submit" disabled={loading}>
-            {loading ? <><Loader size={16} className="spin" /> Posting...</> : "Share with community"}
+            {loading ? <><Loader size={16} className="spin" /> {t("createPost.posting")}</> : t("createPost.submit")}
           </button>
         </form>
       </div>

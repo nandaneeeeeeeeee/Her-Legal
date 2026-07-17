@@ -4,14 +4,23 @@ import {
   Heart, MessageCircle, Bookmark, TrendingUp, Clock,
   Flame, Plus, Search, ChevronRight, Sparkles
 } from "lucide-react";
+import { useLanguage } from "../LanguageContext";
 import { useAuth } from "../AuthContext";
 import { getPosts } from "../api/community";
 import AuthRequired from "../components/AuthRequired";
 import "./Community.css";
 
 const CATEGORIES = [
-  "All", "Women's Rights", "Employment", "Marriage", "Property",
-  "Domestic Violence", "Cyber Crime", "Citizenship", "Family Law", "General",
+  { key: "all", value: "All" },
+  { key: "womenRights", value: "Women's Rights" },
+  { key: "employment", value: "Employment" },
+  { key: "marriage", value: "Marriage" },
+  { key: "property", value: "Property" },
+  { key: "domesticViolence", value: "Domestic Violence" },
+  { key: "cyberCrime", value: "Cyber Crime" },
+  { key: "citizenship", value: "Citizenship" },
+  { key: "familyLaw", value: "Family Law" },
+  { key: "general", value: "General" },
 ];
 
 const ANONYMOUS_NAMES = [
@@ -24,6 +33,7 @@ function getRandomName() {
 }
 
 export default function Community() {
+  const { t } = useLanguage();
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
@@ -59,10 +69,10 @@ export default function Community() {
 
   const timeAgo = (date) => {
     const sec = (Date.now() - new Date(date).getTime()) / 1000;
-    if (sec < 60) return 'just now';
-    if (sec < 3600) return `${Math.floor(sec / 60)}m ago`;
-    if (sec < 86400) return `${Math.floor(sec / 3600)}h ago`;
-    return `${Math.floor(sec / 86400)}d ago`;
+    if (sec < 60) return t("common.justNow");
+    if (sec < 3600) return `${Math.floor(sec / 60)}${t("common.mAgo")}`;
+    if (sec < 86400) return `${Math.floor(sec / 3600)}${t("common.hAgo")}`;
+    return `${Math.floor(sec / 86400)}${t("common.dAgo")}`;
   };
 
   return (
@@ -71,47 +81,47 @@ export default function Community() {
         <div className="container">
           <div className="community-header-top">
             <div>
-              <h1>Community</h1>
-              <p className="community-subtitle">Share, learn, and support each other — anonymously if you choose.</p>
+              <h1>{t("community.title")}</h1>
+              <p className="community-subtitle">{t("community.subtitle")}</p>
             </div>
             <button className="btn btn-primary" onClick={handleCreatePost}>
-              <Plus size={16} /> Share your story
+              <Plus size={16} /> {t("community.shareStory")}
             </button>
           </div>
 
           <div className="community-tabs">
             <button className={`community-tab${sort === 'latest' ? ' active' : ''}`} onClick={() => setSort('latest')}>
-              <Clock size={14} /> Latest
+              <Clock size={14} /> {t("community.latest")}
             </button>
             <button className={`community-tab${sort === 'trending' ? ' active' : ''}`} onClick={() => setSort('trending')}>
-              <Flame size={14} /> Trending
+              <Flame size={14} /> {t("community.trending")}
             </button>
           </div>
 
           <div className="community-categories">
-            {CATEGORIES.map(c => (
-              <button
-                key={c}
-                className={`community-cat${category === c.toLowerCase() || (category === 'all' && c === 'All') ? ' active' : ''}`}
-                onClick={() => setCategory(c === 'All' ? 'all' : c)}
-              >
-                {c}
-              </button>
-            ))}
+              {CATEGORIES.map(c => (
+                <button
+                  key={c.value}
+                  className={`community-cat${category === c.value.toLowerCase() || (category === 'all' && c.key === 'all') ? ' active' : ''}`}
+                  onClick={() => setCategory(c.key === 'all' ? 'all' : c.value)}
+                >
+                  {t(`community.${c.key}`)}
+                </button>
+              ))}
           </div>
         </div>
       </div>
 
       <div className="container community-content">
         {loading ? (
-          <div className="community-loading">Loading posts...</div>
+          <div className="community-loading">{t("community.loadingPosts")}</div>
         ) : posts.length === 0 ? (
           <div className="community-empty">
             <Sparkles size={40} />
-            <h3>No posts yet</h3>
-            <p>Be the first to share your story in this category.</p>
+            <h3>{t("community.noPosts")}</h3>
+            <p>{t("community.noPostsDesc")}</p>
             <button className="btn btn-primary" onClick={handleCreatePost}>
-              Create post
+              {t("community.createPost")}
             </button>
           </div>
         ) : (
@@ -124,7 +134,7 @@ export default function Community() {
                       {post.isAnonymous ? 'A' : (post.userId?.username?.[0] || 'U')}
                     </div>
                     <div>
-                      <strong>{post.anonymousIdentity || post.userId?.username || 'Anonymous'}</strong>
+                      <strong>{post.anonymousIdentity || post.userId?.username || t("common.anonymous")}</strong>
                       <span>{timeAgo(post.createdAt)}</span>
                     </div>
                   </div>

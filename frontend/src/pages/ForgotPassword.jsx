@@ -2,10 +2,12 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Loader, ArrowLeft } from "lucide-react";
 import { forgotPassword } from "../api/auth";
+import { useLanguage } from "../LanguageContext";
 import "./Auth.css";
 
 export default function ForgotPassword() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [sent, setSent] = useState(false);
@@ -39,7 +41,7 @@ export default function ForgotPassword() {
             {error && <div className="auth-error">{error}</div>}
             <form onSubmit={handleSubmit}>
               <div className="auth-field">
-                <label>Email</label>
+                <label>{t("auth.email")}</label>
                 <input className="auth-input" type="email" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} required />
               </div>
               <button className="auth-submit" type="submit" disabled={loading}>

@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../AuthContext";
+import { useLanguage } from "../LanguageContext";
 import "./Confessions.css";
 
 function Confessions() {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [posts, setPosts] = useState([]);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
@@ -57,31 +59,31 @@ function Confessions() {
   return (
     <div className="confessions-page">
       <div className="confessions-header">
-        <span className="section-label">Share Your Story</span>
-        <h1>Your voice, your truth</h1>
-        <p>Share your experience anonymously. You are not alone.</p>
+        <span className="section-label">{t("confessions.label")}</span>
+        <h1>{t("confessions.title")}</h1>
+        <p>{t("confessions.desc")}</p>
       </div>
 
       <div className="post-box">
         <textarea
-          placeholder="What would you like to share?"
+          placeholder={t("confessions.placeholder")}
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
         <div className="post-box-footer">
           <label className="anonymous-toggle">
             <input type="checkbox" checked={anonymous} onChange={(e) => setAnonymous(e.target.checked)} />
-            Post anonymously
+            {t("confessions.anonymous")}
           </label>
           <button className="btn btn-primary" onClick={sharePost} disabled={loading} style={{ padding: "10px 24px", fontSize: 14 }}>
-            {loading ? "Posting..." : "Share →"}
+            {loading ? t("confessions.posting") : t("confessions.share")}
           </button>
         </div>
       </div>
 
       {posts.map((post) => (
         <div key={post._id} className="post-card">
-          <div className="post-author">{post.isAnonymous ? "Anonymous" : user?.username || "Anonymous"}</div>
+          <div className="post-author">{post.isAnonymous ? t("confessions.anonymousAuthor") : user?.username || t("confessions.anonymousAuthor")}</div>
           <p className="post-text">{post.text}</p>
           {post.replies?.map((r, i) => (
             <div key={i} className="replies">
@@ -94,11 +96,11 @@ function Confessions() {
           <div className="reply-box">
             <input
               type="text"
-              placeholder="Write a reply..."
+              placeholder={t("confessions.replyPlaceholder")}
               value={replyText[post._id] || ""}
               onChange={(e) => setReplyText((prev) => ({ ...prev, [post._id]: e.target.value }))}
             />
-            <button onClick={() => reply(post._id)}>Reply</button>
+            <button onClick={() => reply(post._id)}>{t("confessions.reply")}</button>
           </div>
         </div>
       ))}

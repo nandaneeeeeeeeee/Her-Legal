@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import { Clock } from "lucide-react";
+import { useLanguage } from "../LanguageContext";
 
 export default function SessionExpired() {
+  const { t } = useLanguage();
   return (
     <div className="auth-page">
       <div className="auth-card" style={{ textAlign: 'center' }}>
@@ -10,12 +12,12 @@ export default function SessionExpired() {
             <Clock size={28} />
           </div>
         </div>
-        <h1>Session expired</h1>
+        <h1>{t("auth.sessionExpired")}</h1>
         <p className="auth-subtitle">
-          Your session has expired. Please sign in again to continue.
+          {t("auth.sessionExpiredDesc")}
         </p>
         <Link to="/auth/login" className="btn btn-primary" style={{ display: 'inline-flex', marginTop: 8 }}>
-          Sign in again
+          {t("auth.signInAgain")}
         </Link>
       </div>
     </div>

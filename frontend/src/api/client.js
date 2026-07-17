@@ -42,6 +42,14 @@ async function tryRefresh() {
 function buildOptions(options) {
   const { body, method = 'GET', headers: extraHeaders, ...rest } = options;
   const headers = { 'Content-Type': 'application/json', ...extraHeaders };
+  const lang = (() => {
+    try {
+      const fromUser = JSON.parse(localStorage.getItem('herlegal_user') || '{}')?.language;
+      if (fromUser) return fromUser;
+    } catch {}
+    return localStorage.getItem('herlegal_language') || null;
+  })();
+  if (lang) headers['X-Language'] = lang;
   const opts = { method, headers, ...rest };
   if (body !== undefined) opts.body = JSON.stringify(body);
   return opts;

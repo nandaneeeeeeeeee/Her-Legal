@@ -4,11 +4,13 @@ import { Mail, Loader, ArrowLeft } from "lucide-react";
 import { useAuth } from "../AuthContext";
 import { sendMagicLink } from "../api/auth";
 import GoogleLoginButton from "../components/GoogleLoginButton";
+import { useLanguage } from "../LanguageContext";
 import "./Auth.css";
 
 export default function Login() {
   const { login, googleLogin } = useAuth();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [searchParams] = useSearchParams();
   const [email, setEmail] = useState(searchParams.get('email') || "");
   const [password, setPassword] = useState("");
@@ -73,7 +75,7 @@ export default function Login() {
             <>
               <button className="auth-back" onClick={() => setShowMagic(false)}>
                 <ArrowLeft size={16} />
-                Back
+                {t("common.back")}
               </button>
               <h1>Email login</h1>
               <p className="auth-subtitle">We'll send a magic link to your inbox.</p>
@@ -114,8 +116,8 @@ export default function Login() {
   return (
     <div className="auth-page">
       <div className="auth-card">
-        <h1>Welcome back</h1>
-        <p className="auth-subtitle">Sign in to Her Legal.</p>
+        <h1>{t("auth.welcomeBack")}</h1>
+        <p className="auth-subtitle">{t("auth.signInDesc")}</p>
 
         {error && <div className="auth-error">{error}</div>}
 
@@ -129,7 +131,7 @@ export default function Login() {
 
         <form onSubmit={handleSubmit}>
           <div className="auth-field">
-            <label>Email</label>
+            <label>{t("auth.email")}</label>
             <input
               className="auth-input"
               type="email"
@@ -140,7 +142,7 @@ export default function Login() {
             />
           </div>
           <div className="auth-field">
-            <label>Password</label>
+            <label>{t("auth.password")}</label>
             <input
               className="auth-input"
               type="password"
@@ -156,7 +158,7 @@ export default function Login() {
             </Link>
           </div>
           <button className="auth-submit" type="submit" disabled={loading}>
-            {loading ? <><Loader size={16} className="spin" /> Signing in...</> : "Sign in"}
+            {loading ? <><Loader size={16} className="spin" /> {t("auth.pleaseWait")}</> : t("auth.signIn")}
           </button>
         </form>
 
@@ -168,7 +170,7 @@ export default function Login() {
         </div>
 
         <div className="auth-footer">
-          Don't have an account? <Link to="/auth/signup">Sign up</Link>
+          {t("auth.dontHaveAccount")} <Link to="/auth/signup">{t("auth.signUp")}</Link>
         </div>
       </div>
     </div>

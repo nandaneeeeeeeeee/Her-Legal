@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "../AuthContext";
 import { completeOnboarding } from "../api/settings";
+import { useLanguage } from "../LanguageContext";
 import "./Onboarding.css";
 
 const interests = [
@@ -16,6 +17,7 @@ const interests = [
 export default function Onboarding() {
   const { user, updateUser } = useAuth();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [step, setStep] = useState(0);
   const [lang, setLang] = useState("en");
   const [selectedInterests, setSelectedInterests] = useState([]);
@@ -52,16 +54,16 @@ export default function Onboarding() {
     // Step 0: Language
     <div key="lang" className="onb-step">
       <div className="onb-icon-wrap"><Globe size={32} /></div>
-      <h2>Choose your language</h2>
-      <p className="onb-desc">Select your preferred language for the platform.</p>
+      <h2>{t("onboarding.step0Title")}</h2>
+      <p className="onb-desc">{t("onboarding.step0Desc")}</p>
       <div className="onb-lang-grid">
         <button className={`onb-lang-btn${lang === 'en' ? ' active' : ''}`} onClick={() => setLang('en')}>
           <span className="onb-lang-emoji">🇬🇧</span>
-          <span className="onb-lang-name">English</span>
+          <span className="onb-lang-name">{t("onboarding.english")}</span>
         </button>
         <button className={`onb-lang-btn${lang === 'ne' ? ' active' : ''}`} onClick={() => setLang('ne')}>
           <span className="onb-lang-emoji">🇳🇵</span>
-          <span className="onb-lang-name">नेपाली</span>
+          <span className="onb-lang-name">{t("onboarding.nepali")}</span>
         </button>
       </div>
     </div>,
@@ -69,8 +71,8 @@ export default function Onboarding() {
     // Step 1: Interests
     <div key="interests" className="onb-step">
       <div className="onb-icon-wrap"><Heart size={32} /></div>
-      <h2>What interests you?</h2>
-      <p className="onb-desc">Pick topics you'd like to learn about. You can change these later.</p>
+      <h2>{t("onboarding.step1Title")}</h2>
+      <p className="onb-desc">{t("onboarding.step1Desc")}</p>
       <div className="onb-interests-grid">
         {interests.map(item => (
           <button
@@ -88,14 +90,14 @@ export default function Onboarding() {
     // Step 2: Community Preferences
     <div key="prefs" className="onb-step">
       <div className="onb-icon-wrap"><Shield size={32} /></div>
-      <h2>Community preferences</h2>
-      <p className="onb-desc">Customize your community experience.</p>
+      <h2>{t("onboarding.step2Title")}</h2>
+      <p className="onb-desc">{t("onboarding.step2Desc")}</p>
       <div className="onb-prefs">
         {[
-          { key: 'anonymousPosting', label: 'Anonymous posting', desc: 'Your identity is hidden from the public' },
-          { key: 'receiveReplies', label: 'Receive replies', desc: 'Get notified when someone replies to your posts' },
-          { key: 'receiveNotifications', label: 'Receive notifications', desc: 'Stay updated on community activity' },
-          { key: 'receiveLegalUpdates', label: 'Legal updates', desc: 'Receive updates about Nepali law changes' },
+          { key: 'anonymousPosting', label: t("onboarding.anonymousPosting"), desc: t("onboarding.anonymousPostingDesc") },
+          { key: 'receiveReplies', label: t("onboarding.receiveReplies"), desc: t("onboarding.receiveRepliesDesc") },
+          { key: 'receiveNotifications', label: t("onboarding.receiveNotifications"), desc: t("onboarding.receiveNotificationsDesc") },
+          { key: 'receiveLegalUpdates', label: t("onboarding.legalUpdates"), desc: t("onboarding.legalUpdatesDesc") },
         ].map(p => (
           <label key={p.key} className="onb-pref-row">
             <div>
@@ -120,27 +122,27 @@ export default function Onboarding() {
           <Lock size={32} />
         </div>
       </div>
-      <h2>Your privacy matters</h2>
-      <p className="onb-desc">Here's how we protect you on Her Legal.</p>
+      <h2>{t("onboarding.step3Title")}</h2>
+      <p className="onb-desc">{t("onboarding.step3Desc")}</p>
       <div className="onb-privacy-list">
         <div className="onb-privacy-item">
           <Shield size={16} />
-          <span>Your identity is hidden from the public</span>
+          <span>{t("onboarding.privacyBullet1")}</span>
         </div>
         <div className="onb-privacy-item">
           <Lock size={16} />
-          <span>Only authorized moderators can investigate abuse</span>
+          <span>{t("onboarding.privacyBullet2")}</span>
         </div>
         <div className="onb-privacy-item">
           <Sparkles size={16} />
-          <span>Your documents and conversations are private</span>
+          <span>{t("onboarding.privacyBullet3")}</span>
         </div>
         <div className="onb-privacy-item">
           <Check size={16} />
-          <span>You control whether each post is anonymous or public</span>
+          <span>{t("onboarding.privacyBullet4")}</span>
         </div>
       </div>
-      <p className="onb-ready-text">You're all set! Let's get started.</p>
+      <p className="onb-ready-text">{t("onboarding.ready")}</p>
     </div>,
   ];
 
@@ -162,7 +164,7 @@ export default function Onboarding() {
         <div className="onb-actions">
           {step > 0 && (
             <button className="btn btn-secondary" onClick={() => setStep(s => s - 1)}>
-              <ArrowLeft size={16} /> Back
+              <ArrowLeft size={16} /> {t("common.back")}
             </button>
           )}
           <div style={{ flex: 1 }} />
@@ -172,11 +174,11 @@ export default function Onboarding() {
               onClick={() => setStep(s => s + 1)}
               disabled={step === 0 ? false : step === 1 && selectedInterests.length === 0}
             >
-              Continue <ArrowRight size={16} />
+              {t("common.continue")} <ArrowRight size={16} />
             </button>
           ) : (
             <button className="btn btn-primary" onClick={handleComplete}>
-              Go to dashboard <ArrowRight size={16} />
+              {t("onboarding.goToDashboard")} <ArrowRight size={16} />
             </button>
           )}
         </div>

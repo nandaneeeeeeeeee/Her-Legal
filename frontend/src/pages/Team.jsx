@@ -1,16 +1,18 @@
+import { useLanguage } from "../LanguageContext";
+
 function Team() {
+  const { t } = useLanguage();
   return (
     <div style={{ padding: "120px 24px 80px", maxWidth: "var(--max-width)", margin: "0 auto", width: "100%" }}>
-      <span className="section-label">People</span>
-      <h1 style={{ marginBottom: 48 }}>Our Team</h1>
+      <span className="section-label">{t("team.label")}</span>
+      <h1 style={{ marginBottom: 48 }}>{t("team.title")}</h1>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 32 }}>
         {[
-          { name: "Aarati Gurung", role: "", initials: "AG" },
-          { name: "Dalsara Soti Magar", role: "", initials: "DSM" },
-          { name: "Nandani Sewa", role: "", initials: "NS" },
-          { name: "Sofiya Kunwar", role: "", initials: "SK" },
-        
+          { name: t("team.members.0.name"), role: t("team.members.0.role"), initials: "AG" },
+          { name: t("team.members.1.name"), role: t("team.members.1.role"), initials: "DSM" },
+          { name: t("team.members.2.name"), role: t("team.members.2.role"), initials: "NS" },
+          { name: t("team.members.3.name"), role: t("team.members.3.role"), initials: "SK" },
         ].map((member) => (
           <div key={member.name} style={{ textAlign: "center" }}>
             <div style={{

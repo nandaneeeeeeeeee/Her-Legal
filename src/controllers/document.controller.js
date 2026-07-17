@@ -24,7 +24,8 @@ const TEMPLATE_PROMPTS = {
 };
 
 export const generateDocument = asyncHandler(async (req, res) => {
-    const { type, formData } = req.body;
+    const { type, formData, language } = req.body;
+    const detectedLang = language || req.language || 'en';
 
     if (!type || !formData) {
         throw new ApiError(400, 'Document type and form data are required');
@@ -39,11 +40,15 @@ export const generateDocument = asyncHandler(async (req, res) => {
         });
     }
 
+    const systemLang = detectedLang === 'ne'
+        ? 'Generate documents in Nepali language (Devanagari script). Use proper legal formatting appropriate for Nepali courts and authorities. Return only the document content.'
+        : 'Generate documents in English. Use proper legal formatting. Return only the document content.';
+
     const prompt = `${TEMPLATE_PROMPTS[type] || TEMPLATE_PROMPTS.letter}\n\nUse these details:\n${Object.entries(formData).map(([k, v]) => `${k}: ${v || 'N/A'}`).join('\n')}`;
 
     const completion = await groq.chat.completions.create({
         messages: [
-            { role: 'system', content: 'You are a legal document assistant for Nepal. Generate documents in English. Use proper legal formatting. Return only the document content.' },
+            { role: 'system', content: `You are a legal document assistant for Nepal. ${systemLang}` },
             { role: 'user', content: prompt },
         ],
         model: 'llama-3.3-70b-versatile',

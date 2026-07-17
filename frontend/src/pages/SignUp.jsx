@@ -3,11 +3,13 @@ import { useNavigate, Link } from "react-router-dom";
 import { Loader } from "lucide-react";
 import { useAuth } from "../AuthContext";
 import GoogleLoginButton from "../components/GoogleLoginButton";
+import { useLanguage } from "../LanguageContext";
 import "./Auth.css";
 
 export default function SignUp() {
   const { register, googleLogin } = useAuth();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [form, setForm] = useState({ username: "", email: "", phone: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -44,8 +46,8 @@ export default function SignUp() {
   return (
     <div className="auth-page">
       <div className="auth-card">
-        <h1>Create account</h1>
-        <p className="auth-subtitle">Join Her Legal. It's free and anonymous.</p>
+        <h1>{t("auth.createAccount")}</h1>
+        <p className="auth-subtitle">{t("auth.joinDesc")}</p>
 
         {error && <div className="auth-error">{error}</div>}
 
@@ -59,28 +61,28 @@ export default function SignUp() {
 
         <form onSubmit={handleSubmit}>
           <div className="auth-field">
-            <label>Username</label>
+            <label>{t("auth.username")}</label>
             <input className="auth-input" type="text" placeholder="Your name" value={form.username} onChange={update('username')} required minLength={3} />
           </div>
           <div className="auth-field">
-            <label>Email</label>
+            <label>{t("auth.email")}</label>
             <input className="auth-input" type="email" placeholder="you@example.com" value={form.email} onChange={update('email')} required />
           </div>
           <div className="auth-field">
-            <label>Phone (optional)</label>
+            <label>{t("auth.phone")}</label>
             <input className="auth-input" type="tel" placeholder="+977-xxxxxxxxx" value={form.phone} onChange={update('phone')} />
           </div>
           <div className="auth-field">
-            <label>Password</label>
+            <label>{t("auth.password")}</label>
             <input className="auth-input" type="password" placeholder="At least 6 characters" value={form.password} onChange={update('password')} required minLength={6} />
           </div>
           <button className="auth-submit" type="submit" disabled={loading}>
-            {loading ? <><Loader size={16} className="spin" /> Creating account...</> : "Create account"}
+            {loading ? <><Loader size={16} className="spin" /> {t("auth.pleaseWait")}</> : t("auth.createAccountBtn")}
           </button>
         </form>
 
         <div className="auth-footer">
-          Already have an account? <Link to="/auth/login">Sign in</Link>
+          {t("auth.alreadyHaveAccount")} <Link to="/auth/login">{t("auth.signInAction")}</Link>
         </div>
       </div>
     </div>

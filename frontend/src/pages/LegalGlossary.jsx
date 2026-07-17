@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Search, BookOpen, ChevronDown } from "lucide-react";
+import { useLanguage } from "../LanguageContext";
 import "./LegalGlossary.css";
 
 const TERMS = [
@@ -76,7 +77,21 @@ const TERMS = [
 
 const CATEGORIES = [...new Set(TERMS.map(t => t.category))];
 
+const CATEGORY_LABELS = {
+  'Court Procedure': 'glossary.courtProcedure',
+  'Family Law': 'glossary.familyLaw',
+  'Criminal Law': 'glossary.criminalLaw',
+  'Property Law': 'glossary.propertyLaw',
+  'Civil Law': 'glossary.civilLaw',
+  'Constitutional Law': 'glossary.constitutionalLaw',
+  'Intellectual Property': 'glossary.intellectualProperty',
+  'Employment Law': 'glossary.employmentLaw',
+  'Dispute Resolution': 'glossary.disputeResolution',
+  'Immigration': 'glossary.immigration',
+};
+
 export default function LegalGlossary() {
+  const { t, lang } = useLanguage();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
   const [openTerm, setOpenTerm] = useState(null);
@@ -93,8 +108,8 @@ export default function LegalGlossary() {
         <div className="glossary-header">
           <BookOpen size={20} />
           <div>
-            <h1>Legal Glossary</h1>
-            <p className="glossary-subtitle">Common Nepali legal terms explained in plain language.</p>
+            <h1>{t("glossary.title")}</h1>
+            <p className="glossary-subtitle">{t("glossary.subtitle")}</p>
           </div>
         </div>
 
@@ -103,31 +118,32 @@ export default function LegalGlossary() {
             <Search size={16} />
             <input
               type="text"
-              placeholder="Search terms or definitions..."
+              placeholder={t("glossary.searchPlaceholder")}
               value={search}
               onChange={e => setSearch(e.target.value)}
             />
           </div>
           <div className="glossary-cats">
-            <button className={`glossary-cat${category === 'all' ? ' active' : ''}`} onClick={() => setCategory('all')}>All</button>
+            <button className={`glossary-cat${category === 'all' ? ' active' : ''}`} onClick={() => setCategory('all')}>{t("glossary.terms")}</button>
             {CATEGORIES.map(c => (
-              <button key={c} className={`glossary-cat${category === c ? ' active' : ''}`} onClick={() => setCategory(c)}>{c}</button>
+              <button key={c} className={`glossary-cat${category === c ? ' active' : ''}`} onClick={() => setCategory(c)}>{t(CATEGORY_LABELS[c] || c)}</button>
             ))}
           </div>
         </div>
 
-        <div className="glossary-count">{filtered.length} terms</div>
+        <div className="glossary-count">{filtered.length} {t("glossary.terms")}</div>
 
         <div className="glossary-list">
           {filtered.map((t, i) => (
             <div key={i} className={`glossary-term${openTerm === i ? ' open' : ''}`}>
               <button className="glossary-term-header" onClick={() => setOpenTerm(openTerm === i ? null : i)}>
                 <div>
-                  <strong>{t.term}</strong>
-                  <span className="glossary-cat-badge">{t.category}</span>
+                  <strong>{lang === 'ne' && t.nepali ? t.nepali : t.term}</strong>
+                  <span className={`glossary-cat-badge ${lang === 'ne' ? t.category.toLowerCase().replace(/\s+/g, '-') : ''}`}>{t.category}</span>
                 </div>
                 <div>
-                  {t.nepali && <span className="glossary-nepali">{t.nepali}</span>}
+                  {t.nepali && lang !== 'ne' && <span className="glossary-nepali">{t.nepali}</span>}
+                  {lang === 'ne' && <span className="glossary-nepali" style={{ opacity: 0.6, fontSize: '0.85em' }}>{t.term}</span>}
                   <ChevronDown size={14} className={`glossary-cv${openTerm === i ? ' rot' : ''}`} />
                 </div>
               </button>

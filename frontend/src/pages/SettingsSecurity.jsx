@@ -2,12 +2,14 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Loader } from "lucide-react";
 import { useAuth } from "../AuthContext";
+import { useLanguage } from "../LanguageContext";
 import { changePassword } from "../api/settings";
 import "../pages/Auth.css";
 import "../pages/Settings.css";
 
 export default function SettingsSecurity() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [form, setForm] = useState({
     currentPassword: "",
     newPassword: "",
@@ -24,16 +26,16 @@ export default function SettingsSecurity() {
     setError("");
     setSuccess("");
     if (form.newPassword !== form.confirmPassword) {
-      setError("Passwords do not match");
+      setError(t("settingsSecurity.passwordsMismatch"));
       return;
     }
     setLoading(true);
     try {
       await changePassword(form.currentPassword, form.newPassword, form.confirmPassword);
-      setSuccess("Password changed successfully");
+      setSuccess(t("settingsSecurity.passwordChanged"));
       setForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
     } catch (err) {
-      setError(err.message || "Failed to change password");
+      setError(err.message || t("settingsSecurity.changeFailed"));
     } finally {
       setLoading(false);
     }
@@ -43,29 +45,29 @@ export default function SettingsSecurity() {
     <div className="settings-page">
       <div className="settings-card">
         <button className="auth-back" onClick={() => navigate('/dashboard')}>
-          <ArrowLeft size={16} /> Dashboard
+          <ArrowLeft size={16} /> {t("common.dashboard")}
         </button>
-        <h1>Security</h1>
-        <p className="auth-subtitle">Change your password.</p>
+        <h1>{t("settingsSecurity.title")}</h1>
+        <p className="auth-subtitle">{t("settingsSecurity.subtitle")}</p>
 
         {error && <div className="auth-error">{error}</div>}
         {success && <div className="auth-success">{success}</div>}
 
         <form onSubmit={handleSubmit}>
           <div className="auth-field">
-            <label>Current password</label>
+            <label>{t("settingsSecurity.currentPassword")}</label>
             <input className="auth-input" type="password" value={form.currentPassword} onChange={update('currentPassword')} required />
           </div>
           <div className="auth-field">
-            <label>New password</label>
-            <input className="auth-input" type="password" placeholder="At least 6 characters" value={form.newPassword} onChange={update('newPassword')} required minLength={6} />
+            <label>{t("settingsSecurity.newPassword")}</label>
+            <input className="auth-input" type="password" placeholder={t("settingsSecurity.passwordPlaceholder")} value={form.newPassword} onChange={update('newPassword')} required minLength={6} />
           </div>
           <div className="auth-field">
-            <label>Confirm new password</label>
+            <label>{t("settingsSecurity.confirmPassword")}</label>
             <input className="auth-input" type="password" value={form.confirmPassword} onChange={update('confirmPassword')} required minLength={6} />
           </div>
           <button className="auth-submit" type="submit" disabled={loading}>
-            {loading ? <><Loader size={16} className="spin" /> Saving...</> : "Change password"}
+            {loading ? <><Loader size={16} className="spin" /> {t("common.saving")}</> : t("settingsSecurity.changePassword")}
           </button>
         </form>
       </div>

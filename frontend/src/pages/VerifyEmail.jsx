@@ -2,9 +2,11 @@ import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Loader, Mail } from "lucide-react";
 import { verifyEmail } from "../api/auth";
+import { useLanguage } from "../LanguageContext";
 import "./Auth.css";
 
 export default function VerifyEmail() {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const email = searchParams.get('email') || "";
@@ -15,7 +17,7 @@ export default function VerifyEmail() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!email) { setError("No email provided"); return; }
+    if (!email) { setError(t("auth.noEmail")); return; }
     setError("");
     setLoading(true);
     try {
@@ -23,7 +25,7 @@ export default function VerifyEmail() {
       setSuccess(true);
       setTimeout(() => navigate("/auth/login"), 2000);
     } catch (err) {
-      setError(err.message || "Verification failed");
+      setError(err.message || t("auth.verificationFailed"));
     } finally {
       setLoading(false);
     }
@@ -37,19 +39,19 @@ export default function VerifyEmail() {
             <Mail size={28} />
           </div>
         </div>
-        <h1>Verify your email</h1>
+        <h1>{t("auth.verifyEmail")}</h1>
         <p className="auth-subtitle">
-          We sent a 4-digit code to <strong>{email || "your email"}</strong>
+          {t("auth.verificationCodeSent")} <strong>{email || t("auth.yourEmail")}</strong>
         </p>
 
         {success ? (
-          <div className="auth-success">Email verified! Redirecting to login...</div>
+          <div className="auth-success">{t("auth.emailVerified")}</div>
         ) : (
           <>
             {error && <div className="auth-error">{error}</div>}
             <form onSubmit={handleSubmit}>
               <div className="auth-field">
-                <label>Verification code</label>
+                <label>{t("auth.verificationCode")}</label>
                 <input
                   className="auth-input"
                   type="text"
@@ -63,14 +65,14 @@ export default function VerifyEmail() {
                 />
               </div>
               <button className="auth-submit" type="submit" disabled={loading || code.length !== 4}>
-                {loading ? <><Loader size={16} className="spin" /> Verifying...</> : "Verify email"}
+                {loading ? <><Loader size={16} className="spin" /> {t("auth.verifying")}</> : t("auth.verifyEmailBtn")}
               </button>
             </form>
           </>
         )}
 
         <div className="auth-footer" style={{ marginTop: 32 }}>
-          <button className="auth-link" onClick={() => navigate("/auth/login")}>Back to login</button>
+          <button className="auth-link" onClick={() => navigate("/auth/login")}>{t("auth.backToLogin")}</button>
         </div>
       </div>
     </div>
