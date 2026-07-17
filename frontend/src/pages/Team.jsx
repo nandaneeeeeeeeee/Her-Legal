@@ -6,12 +6,11 @@ function Team() {
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 32 }}>
         {[
-          { name: "Aarati Sharma", role: "Founder & Legal Director", initials: "AS" },
-          { name: "Priya Adhikari", role: "Community Lead", initials: "PA" },
-          { name: "Sita Bhandari", role: "Legal Advisor", initials: "SB" },
-          { name: "Maya Rana", role: "Mental Health Counselor", initials: "MR" },
-          { name: "Rita Thapa", role: "Outreach Coordinator", initials: "RT" },
-          { name: "Neha Gurung", role: "Communications Lead", initials: "NG" },
+          { name: "Aarati Gurung", role: "", initials: "AG" },
+          { name: "Dalsara Soti Magar", role: "", initials: "DSM" },
+          { name: "Nandani Sewa", role: "", initials: "NS" },
+          { name: "Sofiya Kunwar", role: "", initials: "SK" },
+        
         ].map((member) => (
           <div key={member.name} style={{ textAlign: "center" }}>
             <div style={{
