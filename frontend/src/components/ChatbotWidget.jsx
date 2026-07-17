@@ -1,13 +1,14 @@
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { useChatbot } from "../ChatbotContext";
 import { useAuth } from "../AuthContext";
+import { useLanguage } from "../LanguageContext";
 import { MessageCircle, X, SendHorizonal, Loader2 } from "lucide-react";
 import "./ChatbotWidget.css";
 
 function ChatbotWidget() {
   const { open, setOpen } = useChatbot();
   const { user } = useAuth();
-  const [lang, setLang] = useState("en");
+  const { lang, setLanguage, t } = useLanguage();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -27,17 +28,17 @@ function ChatbotWidget() {
       const res = await fetch("/api/v1/chatbot/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text, userId: user?._id }),
+        body: JSON.stringify({ message: text, userId: user?._id, language: lang }),
       });
       const data = await res.json();
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: data.response || data.error || "No response" },
+        { role: "assistant", content: data.response || data.error || t("chatbotWidget.noResponse") },
       ]);
     } catch {
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: "Something went wrong. Please try again." },
+        { role: "assistant", content: t("chatbotWidget.error") },
       ]);
     } finally {
       setLoading(false);
@@ -53,17 +54,15 @@ function ChatbotWidget() {
       {open && (
         <div className="chatbot-box">
           <div className="chatbot-header">
-            <span>Saathi — Here to help</span>
-            <button onClick={() => setLang(lang === "en" ? "ne" : "en")}>
-              {lang === "en" ? "नेपाली" : "English"}
+            <span>{t("chatbotWidget.title")}</span>
+            <button onClick={() => setLanguage(lang === "en" ? "ne" : "en")}>
+              {lang === "en" ? t("chatbotWidget.toggleNepali") : t("chatbotWidget.toggleEnglish")}
             </button>
           </div>
           <div className="chatbot-messages">
             {messages.length === 0 && (
               <p>
-                {lang === "en"
-                  ? "Hi, I'm here to help with questions about your rights. Ask me anything."
-                  : "नमस्ते, म तपाईंको अधिकारसम्बन्धी प्रश्नमा सहयोग गर्न यहाँ छु।"}
+                {t("chatbotWidget.greet")}
               </p>
             )}
             {messages.map((msg, i) => (
@@ -85,7 +84,7 @@ function ChatbotWidget() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder={lang === "en" ? "Type your question..." : "आफ्नो प्रश्न लेख्नुहोस्..."}
+              placeholder={t("chatbotWidget.placeholder")}
             />
             <button onClick={sendMessage} disabled={loading}>
               <SendHorizonal size={18} />

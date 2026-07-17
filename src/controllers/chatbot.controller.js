@@ -8,13 +8,17 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 export const chatWithAI = async (req, res) => {
   try {
-    const { message, userId, conversationId } = req.body;
+    const { message, userId, conversationId, language } = req.body;
+
+    const languageHint = language === 'ne'
+      ? 'When answering, reply in Nepali using Devanagari script.'
+      : 'When answering, reply in English.';
 
     const completion = await groq.chat.completions.create({
       messages: [
         {
           role: 'system',
-          content: 'You are a legal assistant for Her Legal, a platform helping women in Nepal understand their legal rights. Only answer questions related to women legal rights, domestic violence, marriage, divorce, property rights, and harassment laws in Nepal. Be helpful, clear, and supportive.'
+          content: `You are a legal assistant for Her Legal, a platform helping women in Nepal understand their legal rights. Only answer questions related to women legal rights, domestic violence, marriage, divorce, property rights, and harassment laws in Nepal. Be helpful, clear, and supportive. ${languageHint}`
         },
         { role: 'user', content: message }
       ],
