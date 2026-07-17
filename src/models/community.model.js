@@ -69,13 +69,12 @@ postSchema.index({ moderationStatus: 1 });
 postSchema.index({ 'reactions.helpful': 1 });
 
 // Assign anonymous identity before saving
-postSchema.pre('save', function (next) {
+postSchema.pre('save', function () {
     if (this.isAnonymous && !this.anonymousIdentity) {
         const idx = Math.floor(Math.random() * ANONYMOUS_NAMES.length);
         this.anonymousIdentity = ANONYMOUS_NAMES[idx];
     }
     this.commentCount = this.comments.length;
-    next();
 });
 
 export const Post = mongoose.model('Post', postSchema);

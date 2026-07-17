@@ -101,6 +101,21 @@ export const deletePost = asyncHandler(async (req, res) => {
     return ApiResponse.success(res, 'Post deleted');
 });
 
+export const updatePost = asyncHandler(async (req, res) => {
+    const { title, text, category, tags } = req.body;
+    const post = await Post.findById(req.params.id);
+    if (!post) throw new ApiError(404, 'Post not found');
+    if (post.userId.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+        throw new ApiError(403, 'Not authorized');
+    }
+    if (title) post.title = title;
+    if (text) post.text = text;
+    if (category) post.category = category;
+    if (tags) post.tags = tags;
+    await post.save();
+    return ApiResponse.success(res, 'Post updated', post);
+});
+
 // ─── REACTIONS ───
 
 export const reactToPost = asyncHandler(async (req, res) => {

@@ -15,14 +15,13 @@ const conversationSchema = new mongoose.Schema({
   messages: [messageSchema],
 }, { timestamps: true });
 
-conversationSchema.pre('save', function (next) {
+conversationSchema.pre('save', function () {
   if (this.messages.length > 0 && this.title === 'New conversation') {
     const firstMsg = this.messages.find(m => m.role === 'user');
     if (firstMsg) {
       this.title = firstMsg.content.slice(0, 60) + (firstMsg.content.length > 60 ? '...' : '');
     }
   }
-  next();
 });
 
 export const Conversation = mongoose.model('Conversation', conversationSchema);

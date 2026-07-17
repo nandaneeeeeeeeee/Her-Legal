@@ -58,10 +58,13 @@ export const chatWithAI = async (req, res) => {
 export const createConversation = async (req, res) => {
   try {
     const { userId } = req.body;
+    console.log('[createConv] userId:', userId, typeof userId);
     if (!userId) return res.status(400).json({ error: 'userId required' });
     const conv = await Conversation.create({ userId, messages: [] });
     res.status(201).json(conv);
   } catch (error) {
+    console.error('Create conversation error:', error.message);
+    console.error('Full error:', error);
     res.status(500).json({ error: 'Could not create conversation' });
   }
 };

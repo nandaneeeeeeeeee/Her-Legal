@@ -60,7 +60,13 @@ function ChatPage() {
 
   useEffect(() => {
     const el = document.querySelector(".chat-scroll");
-    if (el) el.scrollTop = el.scrollHeight - el.clientHeight;
+    if (!el) return;
+    const last = el.querySelector(".message-row:last-child");
+    if (last) {
+      last.scrollIntoView({ block: "end", behavior: "smooth" });
+    } else {
+      el.scrollTop = el.scrollHeight;
+    }
   }, [messages]);
 
   useEffect(() => {
@@ -426,9 +432,9 @@ function ChatPage() {
                 {t("chatPage.welcomeSub")}
               </p>
               <div className="welcome-categories">
-                {t("chatPage.categories").map((cat) => (
+                {t("chatPage.categories").map((cat, idx) => (
                   <button key={cat.title} className="welcome-cat" onClick={() => sendMessage(cat.prompt)}>
-                    <span className="cat-icon">{categories.find((c) => c.label === cat.title)?.icon || <Scale size={18} />}</span>
+                    <span className="cat-icon">{categoryIcons[idx] || <Scale size={18} />}</span>
                     {cat.title}
                   </button>
                 ))}
@@ -486,7 +492,7 @@ function ChatPage() {
                         </div>
 
                         <div className="follow-ups">
-                          {followUpOptions.map((f) => (
+                          {t("chatPage.followUpOptions").map((f) => (
                             <button key={f} className="follow-chip" onClick={() => sendMessage(`${f} about: ${messages.filter(m => m.role === 'user').pop()?.content || ''}`)}>
                               {f}
                             </button>
@@ -543,8 +549,11 @@ function ChatPage() {
               rows={1}
               className="chat-input"
               onInput={(e) => {
-                e.target.style.height = "auto";
-                e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px";
+                const h = Math.min(e.target.scrollHeight, 120);
+                if (parseInt(e.target.style.height) !== h) {
+                  e.target.style.height = "24px";
+                  e.target.style.height = h + "px";
+                }
               }}
             />
             <div className="input-actions">

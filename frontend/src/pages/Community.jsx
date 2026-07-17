@@ -38,6 +38,7 @@ export default function Community() {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [sort, setSort] = useState('latest');
   const [category, setCategory] = useState('all');
   const [showAuthReq, setShowAuthReq] = useState(false);
@@ -49,12 +50,15 @@ export default function Community() {
 
   const loadPosts = async () => {
     setLoading(true);
+    setError(null);
     try {
       const params = { sort };
       if (category !== 'all') params.category = category;
       const data = await getPosts(params);
       setPosts(data.data.posts || []);
-    } catch { /* ignore */ }
+    } catch {
+      setError('Could not load posts. Make sure the backend server is running.');
+    }
     setLoading(false);
   };
 
@@ -115,6 +119,13 @@ export default function Community() {
       <div className="container community-content">
         {loading ? (
           <div className="community-loading">{t("community.loadingPosts")}</div>
+        ) : error ? (
+          <div className="community-empty">
+            <Sparkles size={36} style={{ color: '#C8102E', opacity: 0.6 }} />
+            <h3>Connection Error</h3>
+            <p>{error}</p>
+            <button className="btn btn-primary" onClick={loadPosts}>Retry</button>
+          </div>
         ) : posts.length === 0 ? (
           <div className="community-empty">
             <Sparkles size={40} />

@@ -13,6 +13,10 @@ export async function createPost(data) {
   return api('/community', { method: 'POST', body: data });
 }
 
+export async function updatePost(id, data) {
+  return api(`/community/${id}`, { method: 'PATCH', body: data });
+}
+
 export async function deletePost(id) {
   return api(`/community/${id}`, { method: 'DELETE' });
 }

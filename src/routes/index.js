@@ -7,6 +7,7 @@ import notificationRoutes from './notification.routes.js';
 import settingsRoutes from './settings.routes.js';
 import documentRoutes from './document.routes.js';
 import confessionRoutes from './confession.routes.js';
+import dashboardRoutes from './dashboard.routes.js';
 
 const router = express.Router();
 
@@ -18,5 +19,6 @@ router.use('/notifications', notificationRoutes);
 router.use('/settings', settingsRoutes);
 router.use('/documents', documentRoutes);
 router.use('/confessions', confessionRoutes);
+router.use('/dashboard', dashboardRoutes);
 
 export default router;

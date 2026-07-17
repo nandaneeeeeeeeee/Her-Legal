@@ -188,7 +188,7 @@ function RealitySection() {
   return (
     <section className="reality-sec">
       <div className="reality-image-wrap">
-        <img src="/images/woman-portrait.jpg" alt=""
+        <img src="/images/women-mountain.jpg" alt=""
           className="reality-image" />
         <div className="reality-overlay" />
       </div>

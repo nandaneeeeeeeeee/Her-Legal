@@ -1,6 +1,6 @@
 import express from 'express';
 import {
-    createPost, getPosts, getPost, getMyPosts, getSavedPosts, deletePost,
+    createPost, getPosts, getPost, getMyPosts, getSavedPosts, updatePost, deletePost,
     reactToPost, savePost, reportPost,
     addComment, getComments, deleteComment,
 } from '../controllers/community.controller.js';
@@ -17,6 +17,7 @@ router.get('/:id/comments', getComments);
 router.post('/', verifyJWT(['user', 'admin']), createPost);
 router.get('/my/posts', verifyJWT(['user', 'admin']), getMyPosts);
 router.get('/my/saved', verifyJWT(['user', 'admin']), getSavedPosts);
+router.patch('/:id', verifyJWT(['user', 'admin']), updatePost);
 router.delete('/:id', verifyJWT(['user', 'admin']), deletePost);
 
 router.post('/:id/react', verifyJWT(['user', 'admin']), reactToPost);
