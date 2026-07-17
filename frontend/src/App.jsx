@@ -2,6 +2,7 @@ import { useState } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { ChatbotProvider } from "./ChatbotContext";
 import { AuthProvider } from "./AuthContext";
+import { LanguageProvider } from "./LanguageContext";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ChatbotWidget from "./components/ChatbotWidget";
@@ -46,9 +47,11 @@ function App() {
   return (
     <AuthProvider>
       <ChatbotProvider>
-        <BrowserRouter>
-          <AppLayout />
-        </BrowserRouter>
+        <LanguageProvider>
+          <BrowserRouter>
+            <AppLayout />
+          </BrowserRouter>
+        </LanguageProvider>
       </ChatbotProvider>
     </AuthProvider>
   );

@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, Search, LogIn, LogOut, User } from "lucide-react";
+import { Menu, X, Search, LogIn, LogOut } from "lucide-react";
 import { useAuth } from "../AuthContext";
+import { useLanguage } from "../LanguageContext";
 import "./Navbar.css";
 
 function Navbar({ onLoginClick }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const { user, logout } = useAuth();
+  const { lang, setLanguage, t } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -20,20 +22,22 @@ function Navbar({ onLoginClick }) {
   useEffect(() => { setOpen(false); }, [location]);
 
   const links = [
-    { to: "/", label: "Home" },
-    { to: "/chat", label: "AI Chat" },
-    { to: "/about", label: "Solutions" },
-    { to: "/campaigns", label: "Resources" },
-    { to: "/news", label: "News" },
-    { to: "/team", label: "About" },
-    { to: "/contact", label: "Contact" },
+    { to: "/", label: t("navbar.home") },
+    { to: "/chat", label: t("navbar.aiChat") },
+    { to: "/about", label: t("navbar.solutions") },
+    { to: "/campaigns", label: t("navbar.resources") },
+    { to: "/news", label: t("navbar.news") },
+    { to: "/team", label: t("navbar.about") },
+    { to: "/contact", label: t("navbar.contact") },
   ];
 
   return (
     <nav className={`navbar${scrolled ? " scrolled" : ""}`}>
       <div className="nav-inner">
         <div className="nav-left">
-          <Link to="/" className="nav-logo">her<span>legal</span></Link>
+          <Link to="/" className="nav-logo">
+            <img src="/logo.jpeg" alt="Her Legal" className="nav-logo-image" width="100" height="40" />
+          </Link>
           <ul className={`nav-links${open ? " open" : ""}`}>
             {links.map((link) => (
               <li key={link.to}>
@@ -43,6 +47,18 @@ function Navbar({ onLoginClick }) {
           </ul>
         </div>
         <div className="nav-right">
+          <div className="nav-language-selector">
+            <label htmlFor="language-select" className="nav-language-label">{t("navbar.selectLanguage")}</label>
+            <select
+              id="language-select"
+              value={lang}
+              onChange={(e) => setLanguage(e.target.value)}
+              className="nav-language-select"
+            >
+              <option value="en">English</option>
+              <option value="ne">नेपाली</option>
+            </select>
+          </div>
           <button className="btn btn-ghost" style={{ height: 36, padding: "0 12px" }} onClick={() => navigate("/chat")}>
             <Search size={16} />
           </button>
