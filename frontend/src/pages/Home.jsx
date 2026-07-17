@@ -53,7 +53,7 @@ function AIChatDemo() {
         {step >= 0 && (
           <div className="chat-msg user">
             <div className="chat-bubble user-bubble">
-              Can my employer fire me without notice?
+              Can my husband change the property ownership of our house without my consent?
             </div>
           </div>
         )}
@@ -61,17 +61,17 @@ function AIChatDemo() {
           <div className="chat-msg ai">
             <div className="ai-thinking">
               <span className="dot-pulse" />
-              Analyzing Nepal Labour Act, 2074...
+              Analyzing Nepal Property Law, 2074...
             </div>
           </div>
         )}
         {step >= 2 && (
           <div className="chat-msg ai">
             <div className="chat-bubble ai-bubble">
-              <strong>Under Nepal's Labour Act, 2074:</strong>
+              <strong>Under Nepal's Property Law, 2074:</strong>
               <p style={{ marginTop: 8, fontSize: 13, lineHeight: 1.6 }}>
-                Your employer cannot terminate you without a valid reason and proper notice. 
-                The required notice period depends on your employment duration:
+                Your husband cannot unilaterally change the property ownership of your house without your consent. 
+                Both spouses must agree to any changes in property ownership.
               </p>
               <ul style={{ margin: "8px 0", paddingLeft: 16, fontSize: 13, lineHeight: 1.8 }}>
                 <li>Less than 1 year: 30 days notice</li>
@@ -84,7 +84,7 @@ function AIChatDemo() {
         {step >= 3 && (
           <div className="chat-msg ai">
             <div className="chat-links">
-              <span className="chat-link"><Scale size={12} /> Labour Act, 2074</span>
+              <span className="chat-link"><Scale size={12} /> Property Act, 2074</span>
               <span className="chat-link"><FileText size={12} /> Severance Guide</span>
               <span className="chat-link"><MessageCircle size={12} /> File Complaint</span>
             </div>
