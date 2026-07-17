@@ -6,3 +6,5 @@ dist-ssr
 .DS_Store
 .vscode
 .idea
+.vercel
+*.package-lock.json
