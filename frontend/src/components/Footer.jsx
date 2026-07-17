@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import { Heart } from "lucide-react";
+import { useLanguage } from "../LanguageContext";
 
 export default function Footer() {
+  const { t } = useLanguage();
+
   return (
     <footer style={{
       background: "var(--bg)", borderTop: "1px solid var(--border)",
@@ -24,37 +27,37 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 style={{ fontSize: 12, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-muted)", marginBottom: 16 }}>Platform</h4>
+            <h4 style={{ fontSize: 12, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-muted)", marginBottom: 16 }}>{t("footer.platform")}</h4>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {[["AI Assistant", "/chat"], ["Legal Topics", "/#topics"], ["Documents", "/chat"], ["Knowledge Hub", "/news"]].map(([l, t]) => (
-                <Link key={l} to={t} style={{ fontSize: 13, color: "var(--text)", transition: "color 0.2s" }}
-                  onMouseEnter={e => e.target.style.color = "var(--primary)"}
-                  onMouseLeave={e => e.target.style.color = "var(--text)"}
-                >{l}</Link>
+              {[[t("footer.aiAssistant"), "/chat"], [t("footer.legalTopics"), "/#topics"], [t("footer.documents"), "/chat"], [t("footer.knowledgeHub"), "/news"]].map(([label, href]) => (
+                <Link key={label} to={href} style={{ fontSize: 13, color: "var(--text)", transition: "color 0.2s" }}
+                  onMouseEnter={(e) => e.target.style.color = "var(--primary)"}
+                  onMouseLeave={(e) => e.target.style.color = "var(--text)"}
+                >{label}</Link>
               ))}
             </div>
           </div>
 
           <div>
-            <h4 style={{ fontSize: 12, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-muted)", marginBottom: 16 }}>Company</h4>
+            <h4 style={{ fontSize: 12, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-muted)", marginBottom: 16 }}>{t("footer.company")}</h4>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {[["About", "/team"], ["Contact", "/contact"], ["Privacy", "/contact"], ["Terms", "/contact"]].map(([l, t]) => (
-                <Link key={l} to={t} style={{ fontSize: 13, color: "var(--text)", transition: "color 0.2s" }}
-                  onMouseEnter={e => e.target.style.color = "var(--primary)"}
-                  onMouseLeave={e => e.target.style.color = "var(--text)"}
-                >{l}</Link>
+              {[[t("footer.about"), "/team"], [t("footer.contact"), "/contact"], [t("footer.privacy"), "/contact"], [t("footer.terms"), "/contact"]].map(([label, href]) => (
+                <Link key={label} to={href} style={{ fontSize: 13, color: "var(--text)", transition: "color 0.2s" }}
+                  onMouseEnter={(e) => e.target.style.color = "var(--primary)"}
+                  onMouseLeave={(e) => e.target.style.color = "var(--text)"}
+                >{label}</Link>
               ))}
             </div>
           </div>
 
           <div>
-            <h4 style={{ fontSize: 12, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-muted)", marginBottom: 16 }}>Support</h4>
+            <h4 style={{ fontSize: 12, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-muted)", marginBottom: 16 }}>{t("footer.support")}</h4>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {[["Helpline", "/contact"], ["FAQ", "/#faq"], ["Safety", "/contact"]].map(([l, t]) => (
-                <Link key={l} to={t} style={{ fontSize: 13, color: "var(--text)", transition: "color 0.2s" }}
-                  onMouseEnter={e => e.target.style.color = "var(--primary)"}
-                  onMouseLeave={e => e.target.style.color = "var(--text)"}
-                >{l}</Link>
+              {[[t("footer.helpline"), "/contact"], [t("footer.faq"), "/#faq"], [t("footer.safety"), "/contact"]].map(([label, href]) => (
+                <Link key={label} to={href} style={{ fontSize: 13, color: "var(--text)", transition: "color 0.2s" }}
+                  onMouseEnter={(e) => e.target.style.color = "var(--primary)"}
+                  onMouseLeave={(e) => e.target.style.color = "var(--text)"}
+                >{label}</Link>
               ))}
             </div>
           </div>
@@ -65,10 +68,10 @@ export default function Footer() {
           display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16
         }}>
           <p style={{ fontSize: 12, color: "var(--text-muted)" }}>
-            &copy; {new Date().getFullYear()} Her Legal. All rights reserved.
+            &copy; {new Date().getFullYear()} Her Legal. {t("footer.rightsReserved")}
           </p>
           <p style={{ fontSize: 12, color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 4 }}>
-            Built with <Heart size={12} color="var(--primary)" /> for every woman in Nepal
+            {t("footer.builtWith")} <Heart size={12} color="var(--primary)" />
           </p>
         </div>
       </div>
