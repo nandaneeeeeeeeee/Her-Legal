@@ -11,32 +11,17 @@ import {
 } from "lucide-react";
 import "./ChatPage.css";
 
-const categories = [
-  { icon: <Scale size={18} />, label: "Property Rights", prompt: "What are my property rights in Nepal?" },
-  { icon: <BriefcaseIcon />, label: "Employment", prompt: "What are my workplace rights in Nepal?" },
-  { icon: <Heart size={18} />, label: "Marriage & Divorce", prompt: "How do I file for divorce in Nepal?" },
-  { icon: <Shield size={18} />, label: "Domestic Violence", prompt: "How to report domestic violence in Nepal?" },
-  { icon: <User size={18} />, label: "Women's Rights", prompt: "What are women's constitutional rights in Nepal?" },
-  { icon: <BookOpen size={18} />, label: "Citizenship", prompt: "Explain citizenship laws in Nepal" },
-  { icon: <AlertCircle size={18} />, label: "Cyber Crime", prompt: "How to report cyber crime in Nepal?" },
-  { icon: <Phone size={18} />, label: "Police & FIR", prompt: "How do I file a police complaint in Nepal?" },
+const categoryIcons = [
+  <Scale size={18} />,
+  <BriefcaseIcon />,
+  <Heart size={18} />,
+  <Shield size={18} />,
+  <User size={18} />,
+  <BookOpen size={18} />,
+  <AlertCircle size={18} />,
+  <Phone size={18} />,
 ];
-
-const promptIdeas = [
-  "Can my employer fire me without notice?",
-  "Explain divorce procedures in Nepal",
-  "What is the legal age for marriage?",
-  "Create a rental agreement template",
-];
-
 const emergencyKeywords = ["abuse", "hurting", "emergency", "danger", "help me", "violence", " assaulted", "raped", "beating", "threat"];
-
-const followUpOptions = [
-  "Explain Simply",
-  "Generate Letter",
-  "Show Related Laws",
-  "Find Legal Aid",
-];
 
 function BriefcaseIcon() {
   return (
