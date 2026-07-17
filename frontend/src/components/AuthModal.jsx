@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useAuth } from "../AuthContext";
+import { useLanguage } from "../LanguageContext";
 import { X } from "lucide-react";
 
 function AuthModal({ open, onClose }) {
   const { login, register } = useAuth();
+  const { t } = useLanguage();
   const [mode, setMode] = useState("login");
   const [form, setForm] = useState({ username: "", email: "", phone: "", password: "" });
   const [error, setError] = useState("");
@@ -35,9 +37,9 @@ function AuthModal({ open, onClose }) {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose}><X size={18} /></button>
-        <h2 style={{ marginBottom: 8 }}>{mode === "login" ? "Welcome back" : "Create account"}</h2>
+        <h2 style={{ marginBottom: 8 }}>{mode === "login" ? t("auth.welcomeBack") : t("auth.createAccount")}</h2>
         <p style={{ fontSize: 14, color: "var(--text-muted)", marginBottom: 24 }}>
-          {mode === "login" ? "Sign in to save your conversations." : "Join Her Legal anonymously."}
+          {mode === "login" ? t("auth.signInDesc") : t("auth.joinDesc")}
         </p>
 
         {error && <p style={{ color: "var(--primary)", fontSize: 13, marginBottom: 12 }}>{error}</p>}
@@ -46,7 +48,7 @@ function AuthModal({ open, onClose }) {
           {mode === "register" && (
             <input
               className="modal-input"
-              placeholder="Username"
+              placeholder={t("auth.username")}
               value={form.username}
               onChange={(e) => setForm({ ...form, username: e.target.value })}
               required
@@ -55,7 +57,7 @@ function AuthModal({ open, onClose }) {
           <input
             className="modal-input"
             type="email"
-            placeholder="Email"
+            placeholder={t("auth.email")}
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
             required
@@ -63,7 +65,7 @@ function AuthModal({ open, onClose }) {
           {mode === "register" && (
             <input
               className="modal-input"
-              placeholder="Phone"
+              placeholder={t("auth.phone")}
               value={form.phone}
               onChange={(e) => setForm({ ...form, phone: e.target.value })}
             />
@@ -71,23 +73,23 @@ function AuthModal({ open, onClose }) {
           <input
             className="modal-input"
             type="password"
-            placeholder="Password"
+            placeholder={t("auth.password")}
             value={form.password}
             onChange={(e) => setForm({ ...form, password: e.target.value })}
             required
           />
           <button className="btn btn-primary" type="submit" disabled={loading} style={{ width: "100%", justifyContent: "center", marginTop: 8 }}>
-            {loading ? "Please wait..." : mode === "login" ? "Sign In" : "Create Account"}
+            {loading ? t("auth.pleaseWait") : mode === "login" ? t("auth.signIn") : t("auth.createAccountBtn")}
           </button>
         </form>
 
         <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 20, textAlign: "center" }}>
-          {mode === "login" ? "Don't have an account?" : "Already have an account?"}{" "}
+          {mode === "login" ? t("auth.dontHaveAccount") : t("auth.alreadyHaveAccount")}{" "}
           <button
             onClick={() => { setMode(mode === "login" ? "register" : "login"); setError(""); }}
             style={{ background: "none", border: "none", color: "var(--primary)", fontWeight: 600, cursor: "pointer", fontSize: 13 }}
           >
-            {mode === "login" ? "Sign up" : "Sign in"}
+            {mode === "login" ? t("auth.signUp") : t("auth.signInAction")}
           </button>
         </p>
       </div>

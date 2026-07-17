@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext";
+import { useLanguage } from "../LanguageContext";
 import {
   SendHorizonal, Loader2, Sparkles, ArrowRight, Copy, Check,
   MessageCircle, Scale, Heart, Shield, AlertCircle, BookOpen, User,
@@ -10,32 +11,17 @@ import {
 } from "lucide-react";
 import "./ChatPage.css";
 
-const categories = [
-  { icon: <Scale size={18} />, label: "Property Rights", prompt: "What are my property rights in Nepal?" },
-  { icon: <BriefcaseIcon />, label: "Employment", prompt: "What are my workplace rights in Nepal?" },
-  { icon: <Heart size={18} />, label: "Marriage & Divorce", prompt: "How do I file for divorce in Nepal?" },
-  { icon: <Shield size={18} />, label: "Domestic Violence", prompt: "How to report domestic violence in Nepal?" },
-  { icon: <User size={18} />, label: "Women's Rights", prompt: "What are women's constitutional rights in Nepal?" },
-  { icon: <BookOpen size={18} />, label: "Citizenship", prompt: "Explain citizenship laws in Nepal" },
-  { icon: <AlertCircle size={18} />, label: "Cyber Crime", prompt: "How to report cyber crime in Nepal?" },
-  { icon: <Phone size={18} />, label: "Police & FIR", prompt: "How do I file a police complaint in Nepal?" },
+const categoryIcons = [
+  <Scale size={18} />,
+  <BriefcaseIcon />,
+  <Heart size={18} />,
+  <Shield size={18} />,
+  <User size={18} />,
+  <BookOpen size={18} />,
+  <AlertCircle size={18} />,
+  <Phone size={18} />,
 ];
-
-const promptIdeas = [
-  "Can my employer fire me without notice?",
-  "Explain divorce procedures in Nepal",
-  "What is the legal age for marriage?",
-  "Create a rental agreement template",
-];
-
 const emergencyKeywords = ["abuse", "hurting", "emergency", "danger", "help me", "violence", " assaulted", "raped", "beating", "threat"];
-
-const followUpOptions = [
-  "Explain Simply",
-  "Generate Letter",
-  "Show Related Laws",
-  "Find Legal Aid",
-];
 
 function BriefcaseIcon() {
   return (
@@ -169,6 +155,8 @@ function ChatPage() {
     setEditingTitle(null);
   };
 
+  const { lang, t } = useLanguage();
+
   const detectEmergency = (text) => {
     const lower = text.toLowerCase();
     return emergencyKeywords.some((kw) => lower.includes(kw));
@@ -211,7 +199,7 @@ function ChatPage() {
       const res = await fetch("/api/v1/chatbot/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: msg, userId: user?._id, conversationId: convId }),
+        body: JSON.stringify({ message: msg, userId: user?._id, conversationId: convId, language: lang }),
       });
       if (!res.ok) {
         console.error("[chat] API failed:", res.status);
@@ -348,20 +336,20 @@ function ChatPage() {
       <div className="chat-sidebar">
         <div className="sidebar-header">
           <Bot size={20} />
-          <span>Saathi AI</span>
+          <span>{t("chatPage.title")}</span>
         </div>
 
         <button className="new-chat-btn" onClick={newChat}>
           <Plus size={15} />
-          New Conversation
+          {t("chatPage.newConversation")}
         </button>
 
         <div className="sidebar-section">
-          <div className="sidebar-label">Recent</div>
+          <div className="sidebar-label">{t("chatPage.recent")}</div>
           <div className="sidebar-conversations">
-            {loadingConvs && <p className="sidebar-empty">Loading...</p>}
+            {loadingConvs && <p className="sidebar-empty">{t("chatPage.loading")}</p>}
             {!loadingConvs && conversations.length === 0 && (
-              <p className="sidebar-empty">No conversations yet</p>
+              <p className="sidebar-empty">{t("chatPage.noConversations")}</p>
             )}
             {conversations.map((conv) => (
               <div
@@ -398,10 +386,10 @@ function ChatPage() {
         </div>
 
         <div className="sidebar-nav">
-          <button className="sidebar-nav-item" onClick={() => navigate("/contact")}><Bookmark size={15} /> Saved Documents</button>
-          <button className="sidebar-nav-item" onClick={() => navigate("/contact")}><Star size={15} /> Bookmarks</button>
-          <button className="sidebar-nav-item" onClick={() => navigate("/contact")}><Settings size={15} /> Settings</button>
-          <a href="tel:1145" className="sidebar-nav-item emergency" style={{ textDecoration: "none" }}><Phone size={15} /> Emergency Help</a>
+          <button className="sidebar-nav-item" onClick={() => navigate("/contact")}><Bookmark size={15} /> {t("chatPage.helpButtons.savedDocuments")}</button>
+          <button className="sidebar-nav-item" onClick={() => navigate("/contact")}><Star size={15} /> {t("chatPage.helpButtons.bookmarks")}</button>
+          <button className="sidebar-nav-item" onClick={() => navigate("/contact")}><Settings size={15} /> {t("chatPage.helpButtons.settings")}</button>
+          <a href="tel:1145" className="sidebar-nav-item emergency" style={{ textDecoration: "none" }}><Phone size={15} /> {t("chatPage.emergencyHelp")}</a>
         </div>
       </div>
 
@@ -429,24 +417,24 @@ function ChatPage() {
             <div className="welcome-screen">
               <div className="welcome-badge">
                 <Sparkles size={14} />
-                AI Legal Assistant
+                {t("chatPage.welcomeBadge")}
               </div>
               <h1 className="welcome-title">
-                Know your<br /><span className="welcome-accent">rights.</span>
+                {t("chatPage.welcomeTitle")}<br /><span className="welcome-accent">{t("chatPage.welcomeAccent")}</span>
               </h1>
               <p className="welcome-sub">
-                Ask anything about women's legal rights in Nepal. Free, anonymous, private.
+                {t("chatPage.welcomeSub")}
               </p>
               <div className="welcome-categories">
-                {categories.map((cat) => (
-                  <button key={cat.label} className="welcome-cat" onClick={() => sendMessage(cat.prompt)}>
-                    <span className="cat-icon">{cat.icon}</span>
-                    {cat.label}
+                {t("chatPage.categories").map((cat) => (
+                  <button key={cat.title} className="welcome-cat" onClick={() => sendMessage(cat.prompt)}>
+                    <span className="cat-icon">{categories.find((c) => c.label === cat.title)?.icon || <Scale size={18} />}</span>
+                    {cat.title}
                   </button>
                 ))}
               </div>
               <div className="welcome-prompts">
-                {promptIdeas.map((p) => (
+                {t("chatPage.promptIdeas").map((p) => (
                   <button key={p} className="welcome-prompt" onClick={() => sendMessage(p)}>
                     <span style={{ flex: 1 }}>{p}</span>
                     <ArrowRight size={14} className="welcome-prompt-arrow" />
@@ -464,13 +452,13 @@ function ChatPage() {
                   <div className="message-content">
                     <div className="message-header">
                       <span className="message-sender">
-                        {msg.role === "assistant" ? "Saathi" : "You"}
+                        {msg.role === "assistant" ? t("chatPage.assistant") : t("chatPage.you")}
                       </span>
                     </div>
 
                     {msg.role === "assistant" && msg.isEmergency && (
                       <div className="emergency-banner">
-                        <div className="emergency-title">Need Immediate Help?</div>
+                        <div className="emergency-title">{t("chatPage.needHelp")}</div>
                         <div className="emergency-grid">
                           <a href="tel:1145" className="emergency-btn" style={{ textDecoration: "none" }}><Phone size={14} /> Women's Helpline 1145</a>
                           <a href="tel:100" className="emergency-btn" style={{ textDecoration: "none" }}><Shield size={14} /> Police 100</a>
@@ -517,7 +505,7 @@ function ChatPage() {
                         </div>
 
                         <div className="answer-disclaimer">
-                          This is general legal guidance and not legal advice. Consult a qualified lawyer for your specific situation.
+                          {t("chatPage.legalGuidance")}
                         </div>
                       </>
                     )}
@@ -551,7 +539,7 @@ function ChatPage() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Ask about your legal rights..."
+              placeholder={t("chatPage.promptHint")}
               rows={1}
               className="chat-input"
               onInput={(e) => {
@@ -572,7 +560,7 @@ function ChatPage() {
               </button>
             </div>
           </div>
-          <p className="input-footer">Her Legal provides legal information — not legal advice.</p>
+          <p className="input-footer">{t("chatPage.legalGuidance")}</p>
         </div>
       </div>
 
@@ -581,36 +569,36 @@ function ChatPage() {
         {panelData && (
           <>
             <div className="panel-section">
-              <div className="panel-label">Key Takeaways</div>
+              <div className="panel-label">{t("chatPage.actionPanel.keyTakeaways")}</div>
               <p style={{ fontSize: 13, color: "#4B5563", lineHeight: 1.6 }}>
                 {panelData.summary}
               </p>
             </div>
 
             <div className="panel-section">
-              <div className="panel-label">Related Laws</div>
+              <div className="panel-label">{t("chatPage.panelLinks.relatedLaws")}</div>
               <button className="panel-item" onClick={() => window.open("https://lawcommission.gov.np", "_blank")}><Scale size={14} /> Nepal Constitution</button>
               <button className="panel-item" onClick={() => window.open("https://lawcommission.gov.np", "_blank")}><FileText size={14} /> Labour Act, 2074</button>
               <button className="panel-item" onClick={() => window.open("https://lawcommission.gov.np", "_blank")}><BookOpen size={14} /> Muluki Ain</button>
             </div>
 
             <div className="panel-section">
-              <div className="panel-label">Recommended Documents</div>
-              <button className="panel-item" onClick={() => navigate("/chat")}><FileText size={14} /> Complaint Letter</button>
-              <button className="panel-item" onClick={() => navigate("/chat")}><FileText size={14} /> Rental Agreement</button>
+              <div className="panel-label">{t("chatPage.panelLinks.recommendedDocuments")}</div>
+              <button className="panel-item" onClick={() => navigate("/chat")}><FileText size={14} /> {t("chatPage.panelLinks.complaintLetter")}</button>
+              <button className="panel-item" onClick={() => navigate("/chat")}><FileText size={14} /> {t("chatPage.panelLinks.rentalAgreement")}</button>
             </div>
 
             <div className="panel-section">
-              <div className="panel-label">Legal Aid Contacts</div>
-              <a href="tel:1145" className="panel-item" style={{ textDecoration: "none" }}><Phone size={14} /> Women's Helpline: 1145</a>
-              <a href="tel:100" className="panel-item" style={{ textDecoration: "none" }}><Shield size={14} /> Police: 100</a>
-              <a href="tel:16600178585" className="panel-item" style={{ textDecoration: "none" }}><Heart size={14} /> Legal Aid: 16600178585</a>
+              <div className="panel-label">{t("chatPage.panelLinks.legalAidContacts")}</div>
+              <a href="tel:1145" className="panel-item" style={{ textDecoration: "none" }}><Phone size={14} /> {t("chatPage.panelLinks.womensHelpline")}</a>
+              <a href="tel:100" className="panel-item" style={{ textDecoration: "none" }}><Shield size={14} /> {t("chatPage.panelLinks.police")}</a>
+              <a href="tel:16600178585" className="panel-item" style={{ textDecoration: "none" }}><Heart size={14} /> {t("chatPage.panelLinks.legalAid")}</a>
             </div>
 
             <div className="panel-section">
-              <div className="panel-label">Next Step</div>
-              <button className="panel-item" onClick={() => navigate("/chat")}><ChevronRight size={14} /> Generate Legal Document</button>
-              <button className="panel-item" onClick={() => navigate("/contact")}><ChevronRight size={14} /> Find Nearby Lawyer</button>
+              <div className="panel-label">{t("chatPage.panelLinks.nextStep")}</div>
+              <button className="panel-item" onClick={() => navigate("/chat")}><ChevronRight size={14} /> {t("chatPage.panelLinks.generateDocument")}</button>
+              <button className="panel-item" onClick={() => navigate("/contact")}><ChevronRight size={14} /> {t("chatPage.panelLinks.findLawyer")}</button>
             </div>
           </>
         )}
