@@ -28,9 +28,11 @@ export default function Dashboard() {
   const [stats, setStats] = useState(null);
   const [activity, setActivity] = useState([]);
   const [myPosts, setMyPosts] = useState([]);
-  const [loadingStats, setLoadingStats] = useState(true);
-  const [loadingActivity, setLoadingActivity] = useState(true);
+  const [loadingStats, setLoadingStats] = useState(false);
+  const [loadingActivity, setLoadingActivity] = useState(false);
   const [loadingPosts, setLoadingPosts] = useState(false);
+  const [statsError, setStatsError] = useState(null);
+  const [activityError, setActivityError] = useState(null);
 
   // Edit post state
   const [editingPost, setEditingPost] = useState(null);
@@ -48,32 +50,40 @@ export default function Dashboard() {
   }, [location]);
 
   useEffect(() => {
-    if (!user || !token) return;
+    if (!user) return;
     loadStats();
     loadActivity();
-  }, [user, token]);
+  }, [user]);
 
   useEffect(() => {
-    if ((tab === 'myposts' || tab === 'overview') && user && token) {
+    if ((tab === 'myposts' || tab === 'overview') && user) {
       loadMyPosts();
     }
-  }, [tab, user, token]);
+  }, [tab, user]);
 
   const loadStats = async () => {
     setLoadingStats(true);
+    setStatsError(null);
     try {
       const res = await getStats();
       setStats(res.data);
-    } catch { /* API unavailable */ }
+    } catch (e) {
+      console.error('loadStats error:', e);
+      setStatsError(e.message || 'Failed to load stats');
+    }
     setLoadingStats(false);
   };
 
   const loadActivity = async () => {
     setLoadingActivity(true);
+    setActivityError(null);
     try {
       const res = await getActivity();
       setActivity(res.data || []);
-    } catch { /* API unavailable */ }
+    } catch (e) {
+      console.error('loadActivity error:', e);
+      setActivityError(e.message || 'Failed to load activity');
+    }
     setLoadingActivity(false);
   };
 
@@ -82,7 +92,7 @@ export default function Dashboard() {
     try {
       const res = await getMyPosts();
       setMyPosts(res.data || []);
-    } catch { /* API unavailable */ }
+    } catch (e) { console.error('loadMyPosts error:', e); }
     setLoadingPosts(false);
   };
 
@@ -132,10 +142,10 @@ export default function Dashboard() {
   });
 
   const statItems = [
-    { icon: <MessageCircle size={18} />, label: t("dashboard.aiConversations"), value: stats?.conversations ?? '—', color: '#C8102E' },
-    { icon: <FileText size={18} />, label: t("dashboard.savedDocuments"), value: stats?.documents ?? '—', color: '#2563EB' },
-    { icon: <Bookmark size={18} />, label: t("dashboard.bookmarks"), value: stats?.saved ?? '—', color: '#D97706' },
-    { icon: <Heart size={18} />, label: t("dashboard.communityPosts"), value: stats?.posts ?? '—', color: '#059669' },
+    { icon: <MessageCircle size={18} />, label: t("dashboard.aiConversations"), value: stats?.conversations ?? 0, color: '#C8102E' },
+    { icon: <FileText size={18} />, label: t("dashboard.savedDocuments"), value: stats?.documents ?? 0, color: '#2563EB' },
+    { icon: <Bookmark size={18} />, label: t("dashboard.bookmarks"), value: stats?.saved ?? 0, color: '#D97706' },
+    { icon: <Heart size={18} />, label: t("dashboard.communityPosts"), value: stats?.posts ?? 0, color: '#059669' },
   ];
 
   const quickActions = [

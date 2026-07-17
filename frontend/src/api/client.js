@@ -69,7 +69,7 @@ export async function api(path, options = {}) {
   let res = await fetch(`${BASE}${path}`, opts);
 
   if (res.status === 401 && options.auth !== false) {
-    if (!refreshPromise) refreshPromise = tryRefresh();
+    if (!refreshPromise) refreshPromise = tryRefresh().catch(() => null);
     const newToken = await refreshPromise;
     refreshPromise = null;
 
