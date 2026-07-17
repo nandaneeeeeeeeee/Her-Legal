@@ -1,6 +1,6 @@
 .onb-page {
-  min-height: calc(100dvh - 64px);
-  margin-top: 64px;
+  min-height: calc(100dvh - 76px);
+  margin-top: 76px;
   display: flex;
   align-items: center;
   justify-content: center;
