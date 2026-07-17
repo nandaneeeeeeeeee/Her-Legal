@@ -6,11 +6,11 @@ import AuthService from "../services/auth.services.js";
 export const registerUser = asyncHandler(async (req, res) => {
     const { username, email, phone, password, image } = req.body;
 
-    if (!username || !email || !phone || !password) {
-        throw new ApiError({ statusCode: 400, message: "All fields are required" });
+    if (!username || !email || !password) {
+        throw new ApiError({ statusCode: 400, message: "Username, email, and password are required" });
     }
 
-    const user = await AuthService.registerUser({
+    const result = await AuthService.registerUser({
         username,
         email,
         phone,
@@ -20,8 +20,12 @@ export const registerUser = asyncHandler(async (req, res) => {
 
     return ApiResponse.success(
         res,
-        'User registered successfully. Please check your email for the verification code.',
-        { user: user.toCleanObject() }
+        'Account created successfully',
+        {
+            user: result.user.toCleanObject(),
+            accessToken: result.accessToken,
+            refreshToken: result.refreshToken,
+        }
     );
 });
 

@@ -19,7 +19,6 @@ const userSchema = new mongoose.Schema(
         },
         password: {
             type: String,
-            required: true,
             minlength: 6,
             select: false,
         },
@@ -37,10 +36,40 @@ const userSchema = new mongoose.Schema(
             type: String,
             default: null,
         },
+            authProvider: {
+            type: String,
+            enum: ['email', 'google', 'magic_link'],
+            default: 'email',
+        },
+        googleId: {
+            type: String,
+            default: null,
+            sparse: true,
+        },
         createdBy: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
             default: null,
+        },
+
+        // --- Onboarding ---
+        isOnboarded: {
+            type: Boolean,
+            default: false,
+        },
+        language: {
+            type: String,
+            enum: ['en', 'ne'],
+            default: 'en',
+        },
+        interests: [{
+            type: String,
+        }],
+        communityPrefs: {
+            anonymousPosting: { type: Boolean, default: true },
+            receiveReplies: { type: Boolean, default: true },
+            receiveNotifications: { type: Boolean, default: true },
+            receiveLegalUpdates: { type: Boolean, default: false },
         },
 
         // --- Auth/session ---
@@ -92,7 +121,7 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.pre('save', async function () {
-    if (!this.isModified('password')) return;
+    if (!this.isModified('password') || !this.password) return;
     this.password = await bcrypt.hash(this.password, 10);
 });
 
@@ -103,29 +132,15 @@ userSchema.methods.comparePassword = async function (plain) {
 // Used by AuthService wherever a sanitized user object is returned
 userSchema.methods.toCleanObject = function () {
     const obj = this.toObject();
-    delete obj.password;
-    delete obj.refreshToken;
-    delete obj.verificationCode;
-    delete obj.verificationCodeExpires;
-    delete obj.passwordResetCode;
-    delete obj.passwordResetCodeExpires;
-    delete obj.passwordResetAttempts;
-    delete obj.passwordResetAttemptsExpires;
-    delete obj.__v;
+    const sensitive = ['password','refreshToken','verificationCode','verificationCodeExpires','passwordResetCode','passwordResetCodeExpires','passwordResetAttempts','passwordResetAttemptsExpires','__v'];
+    sensitive.forEach(k => delete obj[k]);
     return obj;
 };
 
 userSchema.set('toJSON', {
     transform(_, obj) {
-        delete obj.password;
-        delete obj.refreshToken;
-        delete obj.verificationCode;
-        delete obj.verificationCodeExpires;
-        delete obj.passwordResetCode;
-        delete obj.passwordResetCodeExpires;
-        delete obj.passwordResetAttempts;
-        delete obj.passwordResetAttemptsExpires;
-        delete obj.__v;
+        const sensitive = ['password','refreshToken','verificationCode','verificationCodeExpires','passwordResetCode','passwordResetCodeExpires','passwordResetAttempts','passwordResetAttemptsExpires','__v'];
+        sensitive.forEach(k => delete obj[k]);
         return obj;
     },
 });

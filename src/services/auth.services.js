@@ -11,18 +11,9 @@ class AuthService {
         const { username, email, phone, password, image } = data;
 
         const existingUser = await User.findOne({ email });
-
-        if (existingUser && existingUser.isVerified) {
+        if (existingUser) {
             throw new ApiError(400, 'User already exists with this email');
         }
-
-        if (existingUser && !existingUser.isVerified) {
-            await User.deleteOne({ _id: existingUser._id });
-        }
-
-        const verificationCode = Math.floor(1000 + Math.random() * 9000).toString();
-        const verificationCodeExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
-        const emailConfigured = Boolean(process.env.GMAIL_USER && process.env.GMAIL_APP_PASS);
 
         const user = await User.create({
             username,
@@ -30,37 +21,28 @@ class AuthService {
             phone,
             password,
             image: image || null,
-            isVerified: !emailConfigured,
-            verificationCode: emailConfigured ? verificationCode : undefined,
-            verificationCodeExpires: emailConfigured ? verificationCodeExpires : undefined,
+            isVerified: true,
         });
 
-        if (!emailConfigured) {
-            return user;
-        }
+        const jwtConfig = getJwtConfig();
+        const payload = {
+            userId: user._id,
+            email: user.email,
+            username: user.username,
+            role: user.role,
+        };
 
-        const emailBody = `
-    <div style="text-align: center; font-family: Arial, sans-serif;">
-      <h1>Welcome, ${username}!</h1>
-      <p>Please use the following 4-digit code to verify your email:</p>
-      <h2 style="color: #4CAF50; letter-spacing: 5px;">${verificationCode}</h2>
-      <p>This code is valid for 24 hours.</p>
-      <p>If you did not request this, please ignore this email.</p>
-    </div>
-  `;
+        const accessToken = jwt.sign(payload, jwtConfig.accessToken.secret, jwtConfig.accessToken.options);
+        const refreshToken = jwt.sign(
+            { userId: user._id, role: user.role },
+            jwtConfig.refreshToken.secret,
+            jwtConfig.refreshToken.options
+        );
 
-        try {
-            await sendMail({
-                recipientEmail: email,
-                subject: 'Verify Your Email',
-                emailBody,
-            });
-        } catch (error) {
-            await User.deleteOne({ _id: user._id });
-            throw new ApiError(500, 'Failed to send verification email');
-        }
+        user.refreshToken = refreshToken;
+        await user.save({ validateBeforeSave: false });
 
-        return user;
+        return { user, accessToken, refreshToken };
     }
 
     static async changePassword(userId, currentPassword, newPassword) {
