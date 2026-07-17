@@ -8,3 +8,4 @@ dist-ssr
 .idea
 .vercel
 *.package-lock.json
+.env*
