@@ -22,7 +22,7 @@ export default function Footer() {
               her<span style={{ color: "var(--primary)" }}>legal</span>
             </h3>
             <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 280 }}>
-              Making legal information accessible, understandable, and actionable for every woman in Nepal.
+              {t("footer.description")}
             </p>
           </div>
 

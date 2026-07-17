@@ -65,16 +65,16 @@ function Navbar({ onLoginClick }) {
           {user ? (
             <button className="btn btn-ghost" onClick={logout} style={{ height: 36, padding: "0 12px" }}>
               <LogOut size={16} />
-              <span style={{ marginLeft: 6 }}>Logout</span>
+              <span style={{ marginLeft: 6 }}>{t("navbar.logout")}</span>
             </button>
           ) : (
             <button className="btn btn-ghost" onClick={onLoginClick} style={{ height: 36, padding: "0 12px" }}>
               <LogIn size={16} />
-              <span style={{ marginLeft: 6 }}>Login</span>
+              <span style={{ marginLeft: 6 }}>{t("navbar.login")}</span>
             </button>
           )}
           <Link to="/confessions" className="btn btn-primary" style={{ height: 36, padding: "0 20px", fontSize: 13 }}>
-            Start Free
+            {t("navbar.startFree")}
           </Link>
           <button className="nav-toggle" onClick={() => setOpen(!open)}>
             {open ? <X size={20} /> : <Menu size={20} />}

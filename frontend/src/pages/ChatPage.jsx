@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext";
+import { useLanguage } from "../LanguageContext";
 import {
   SendHorizonal, Loader2, Sparkles, ArrowRight, Copy, Check,
   MessageCircle, Scale, Heart, Shield, AlertCircle, BookOpen, User,
@@ -169,6 +170,8 @@ function ChatPage() {
     setEditingTitle(null);
   };
 
+  const { lang, t } = useLanguage();
+
   const detectEmergency = (text) => {
     const lower = text.toLowerCase();
     return emergencyKeywords.some((kw) => lower.includes(kw));
@@ -211,7 +214,7 @@ function ChatPage() {
       const res = await fetch("/api/v1/chatbot/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: msg, userId: user?._id, conversationId: convId }),
+        body: JSON.stringify({ message: msg, userId: user?._id, conversationId: convId, language: lang }),
       });
       if (!res.ok) {
         console.error("[chat] API failed:", res.status);

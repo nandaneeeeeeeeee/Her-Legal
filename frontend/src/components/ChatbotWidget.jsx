@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useChatbot } from "../ChatbotContext";
 import { useAuth } from "../AuthContext";
 import { useLanguage } from "../LanguageContext";
@@ -73,7 +73,7 @@ function ChatbotWidget() {
             {loading && (
               <div className="chat-msg assistant">
                 <div className="chat-bubble assistant-bubble" style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <Loader2 size={14} className="spin" /> Thinking...
+                  <Loader2 size={14} className="spin" /> {t("chatbotWidget.thinking")}
                 </div>
               </div>
             )}
