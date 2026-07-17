@@ -50,6 +50,8 @@ const translations = {
       helpline: "Helpline",
       faq: "FAQ",
       safety: "Safety",
+      description: "Making legal information accessible, understandable, and actionable for every woman in Nepal.",
+      description: "Making legal information accessible, understandable, and actionable for every woman in Nepal.",
       rightsReserved: "All rights reserved.",
       builtWith: "Built with ❤️ for every woman in Nepal",
     },
