@@ -15,3 +15,7 @@ export async function markAllAsRead() {
 export async function deleteNotification(id) {
   return api(`/notifications/${id}`, { method: 'DELETE' });
 }
+
+export async function clearAllNotifications() {
+  return api('/notifications/all', { method: 'DELETE' });
+}

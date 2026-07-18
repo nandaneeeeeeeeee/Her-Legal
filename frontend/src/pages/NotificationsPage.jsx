@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Bell, CheckCheck, Trash2, Loader, ArrowLeft, MessageCircle, Heart, FileText, AlertCircle } from "lucide-react";
-import { getNotifications, markAsRead, deleteNotification } from "../api/notifications";
+import { getNotifications, markAsRead, deleteNotification, clearAllNotifications } from "../api/notifications";
 import { useLanguage } from "../LanguageContext";
 import "../pages/Auth.css";
 
@@ -46,6 +46,15 @@ export default function NotificationsPage() {
     } catch {}
   };
 
+  const handleClearAll = async () => {
+    if (!window.confirm(t("notificationsPage.confirmClear"))) return;
+    try {
+      await clearAllNotifications();
+      setNotifs([]);
+      setUnreadCount(0);
+    } catch {}
+  };
+
   const timeAgo = (date) => {
     const sec = (Date.now() - new Date(date).getTime()) / 1000;
     if (sec < 60) return t("common.justNow");
@@ -68,11 +77,18 @@ export default function NotificationsPage() {
             </Link>
             <h1 style={{ fontSize: 24 }}>{t("notificationsPage.title")}</h1>
           </div>
-          {unreadCount > 0 && (
-            <button className="btn btn-ghost" onClick={handleMarkAllRead} style={{ height: 36, fontSize: 13 }}>
-              <CheckCheck size={14} /> {t("notificationsPage.markAllRead")}
-            </button>
-          )}
+          <div style={{ display: 'flex', gap: 8 }}>
+            {notifs.length > 0 && (
+              <button className="btn btn-ghost" onClick={handleClearAll} style={{ height: 36, fontSize: 13, background: '#DC2626', color: 'white' }}>
+                <Trash2 size={14} /> Clear All
+              </button>
+            )}
+            {unreadCount > 0 && (
+              <button className="btn btn-ghost" onClick={handleMarkAllRead} style={{ height: 36, fontSize: 13 }}>
+                <CheckCheck size={14} /> {t("notificationsPage.markAllRead")}
+              </button>
+            )}
+          </div>
         </div>
 
         {notifs.length === 0 ? (

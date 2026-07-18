@@ -521,6 +521,7 @@ const translations = {
       title: "Notifications",
       markAllRead: "Mark all read",
       empty: "No notifications yet",
+      confirmClear: "Are you sure you want to delete all notifications? This action cannot be undone.",
     },
     onboarding: {
       step0Title: "Choose your language",
@@ -1065,6 +1066,7 @@ const translations = {
       title: "सूचनाहरू",
       markAllRead: "सबै पढिएको चिन्ह लगाउनुहोस्",
       empty: "अहिलेसम्म कुनै सूचना छैन",
+      confirmClear: "के तपाई सबै सूचनाहरू हटाउन निश्चित हुनुहुन्छ? यो कार्य पूर्ववत गर्न सकिंदैन।",
     },
     onboarding: {
       step0Title: "आफ्नो भाषा छान्नुहोस्",
