@@ -1,4 +1,10 @@
-const BASE = (import.meta.env.VITE_API_BASE_URL || '/api/v1').replace(/\/$/, '');
+import { getApiBase } from './config';
+
+const BASE = getApiBase();
+
+function getApiBaseUrl() {
+  return getApiBase();
+}
 
 let refreshPromise = null;
 
@@ -66,7 +72,8 @@ export async function api(path, options = {}) {
   const opts = buildOptions(options);
   addAuthHeader(opts.headers);
 
-  let res = await fetch(`${BASE}${path}`, opts);
+  const apiBase = getApiBaseUrl();
+  let res = await fetch(`${apiBase}${path}`, opts);
 
   if (res.status === 401 && options.auth !== false) {
     if (!refreshPromise) refreshPromise = tryRefresh().catch(() => null);
@@ -75,11 +82,16 @@ export async function api(path, options = {}) {
 
     if (newToken) {
       opts.headers['Authorization'] = `Bearer ${newToken}`;
-      res = await fetch(`${BASE}${path}`, opts);
+      res = await fetch(`${apiBase}${path}`, opts);
     }
   }
 
-  const data = await res.json();
+  let data = {};
+  try {
+    data = await res.json();
+  } catch {
+    data = { message: 'Request failed' };
+  }
   if (!res.ok) {
     const err = new Error(data.message || 'Request failed');
     err.status = res.status;
