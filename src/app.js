@@ -21,7 +21,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/api/v1', routes);
+app.use(['/api/v1', '/v1'], routes);
 app.use(errorMiddleware);
 
 export { app }
