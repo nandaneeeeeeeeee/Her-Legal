@@ -119,6 +119,7 @@ export default function PostDetail() {
   if (!post) return null;
 
   const isOwner = user && post.userId?._id === user._id;
+  const authorName = post.isAnonymous ? (post.anonymousIdentity || t("common.anonymous")) : (post.userId?.username || t("common.anonymous"));
   const reactions = [
     { type: 'helpful', icon: <ThumbsUp size={16} />, label: t("postDetail.helpful") },
     { type: 'supportive', icon: <Smile size={16} />, label: t("postDetail.supportive") },
@@ -136,10 +137,10 @@ export default function PostDetail() {
           <div className="postdetail-header">
             <div className="community-author">
               <div className="community-avatar">
-                {post.isAnonymous ? 'A' : (post.userId?.username?.[0] || 'U')}
+                {post.isAnonymous ? 'A' : (authorName?.[0] || 'U')}
               </div>
               <div>
-                <strong>{post.anonymousIdentity || post.userId?.username || t("common.anonymous")}</strong>
+                <strong>{authorName}</strong>
                 <span>{timeAgo(post.createdAt)}</span>
               </div>
             </div>

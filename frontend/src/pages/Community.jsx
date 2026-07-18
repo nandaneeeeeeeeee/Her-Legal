@@ -79,6 +79,11 @@ export default function Community() {
     return `${Math.floor(sec / 86400)}${t("common.dAgo")}`;
   };
 
+  const getAuthorName = (post) => {
+    if (post.isAnonymous) return post.anonymousIdentity || t("common.anonymous");
+    return post.userId?.username || t("common.anonymous");
+  };
+
   return (
     <div className="community-page">
       <div className="community-header">

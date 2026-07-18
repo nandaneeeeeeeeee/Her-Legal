@@ -39,6 +39,7 @@ export const getPosts = asyncHandler(async (req, res) => {
         .sort(sortOption)
         .skip(skip)
         .limit(parseInt(limit))
+        .populate('userId', 'username')
         .select('-comments -flaggedBy -savedBy')
         .lean();
 
