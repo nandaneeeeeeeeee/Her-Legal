@@ -5,8 +5,20 @@
   "outputDirectory": "dist",
   "routes": [
     {
-      "src": "/assets/(.*)",
-      "dest": "/assets/$1"
+      "src": "/images/(.*)",
+      "dest": "/images/$1"
+    },
+    {
+      "src": "/logo\\.jpeg",
+      "dest": "/logo.jpeg"
+    },
+    {
+      "src": "/favicon\\.svg",
+      "dest": "/favicon.svg"
+    },
+    {
+      "src": "/icons\\.svg",
+      "dest": "/icons.svg"
     },
     {
       "src": "/(.*)",
