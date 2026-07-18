@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Bell, CheckCheck, Trash2, Loader, ArrowLeft, MessageCircle, Heart, FileText, AlertCircle } from "lucide-react";
-import { getNotifications, markAsRead, deleteNotification, clearAllNotifications } from "../api/notifications";
+import { getNotifications, markAsRead, clearAllNotifications } from "../api/notifications";
 import { useLanguage } from "../LanguageContext";
 import "../pages/Auth.css";
 
@@ -80,7 +80,7 @@ export default function NotificationsPage() {
           <div style={{ display: 'flex', gap: 8 }}>
             {notifs.length > 0 && (
               <button className="btn btn-ghost" onClick={handleClearAll} style={{ height: 36, fontSize: 13, background: '#DC2626', color: 'white' }}>
-                <Trash2 size={14} /> Clear All
+                <Trash2 size={14} /> {t("notificationsPage.clearAll")}
               </button>
             )}
             {unreadCount > 0 && (

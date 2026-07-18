@@ -520,6 +520,7 @@ const translations = {
     notificationsPage: {
       title: "Notifications",
       markAllRead: "Mark all read",
+      clearAll: "Clear all",
       empty: "No notifications yet",
       confirmClear: "Are you sure you want to delete all notifications? This action cannot be undone.",
     },
@@ -1065,6 +1066,7 @@ const translations = {
     notificationsPage: {
       title: "सूचनाहरू",
       markAllRead: "सबै पढिएको चिन्ह लगाउनुहोस्",
+      clearAll: "सबै हटाउनुहोस्",
       empty: "अहिलेसम्म कुनै सूचना छैन",
       confirmClear: "के तपाई सबै सूचनाहरू हटाउन निश्चित हुनुहुन्छ? यो कार्य पूर्ववत गर्न सकिंदैन।",
     },
