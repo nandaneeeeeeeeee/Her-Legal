@@ -12,24 +12,27 @@ export const chatWithAI = async (req, res) => {
     const detectedLang = language || req.language || 'en';
 
     const languageHint = detectedLang === 'ne'
-      ? `The user may write in Nepali (Devanagari script like नमस्ते), romanized Nepali (Nepali words in English alphabet like "mero naam", "kasto cha", "malai maddat chahiyo"), or English. Detect the language or script of the user's message and ALWAYS respond in the same style:
-- If the user writes in Devanagari script → respond in Devanagari script
-- If the user writes in romanized Nepali (Latin script with Nepali words) → respond in romanized Nepali
-- If the user writes in English → respond in English`
-      : 'Respond in English.';
+      ? `You are a legal assistant for women in Nepal. Respond in Nepali or English, whichever best matches the user's message. Accept and understand Nepali in Devanagari script, Latin/romanized Nepali, and English. Never answer in Hindi. Do not mix Hindi words. If the user writes in Devanagari Nepali, respond in Devanagari Nepali. If the user writes in romanized Nepali or Latin script, respond in romanized Nepali or simple Nepali. If the user writes in English, respond in clear English. If the user mixes Nepali and English, keep the answer in the same mixed style. Keep the response concise, empathetic, and legally relevant. If the question is urgent or about violence, encourage immediate safety steps and suggest contacting local authorities or support services.`
+      : 'Respond in clear English.';
+
+    const systemPrompt = `You are Her Legal's trusted legal support assistant for women in Nepal. Your job is to provide general legal information, practical guidance, and supportive next steps related to women’s rights, domestic violence, marriage, divorce, property rights, harassment, workplace issues, and access to justice in Nepal. Do not give personalized legal advice as a substitute for a lawyer. If the situation involves immediate danger, abuse, or urgent legal risk, advise the user to seek help from police, a shelter, a legal aid service, or a qualified lawyer. Always stay respectful, non-judgmental, and calm. ${languageHint}`;
 
     const completion = await groq.chat.completions.create({
       messages: [
-        {
-          role: 'system',
-          content: `You are a legal assistant for Her Legal, a platform helping women in Nepal understand their legal rights. Only answer questions related to women legal rights, domestic violence, marriage, divorce, property rights, and harassment laws in Nepal. Be helpful, clear, and supportive. ${languageHint}`
-        },
+        { role: 'system', content: systemPrompt },
         { role: 'user', content: message }
       ],
       model: 'llama-3.3-70b-versatile',
+      temperature: 0.4,
+      max_completion_tokens: 300,
     });
 
-    const aiResponse = completion.choices[0].message.content;
+    let aiResponse = completion.choices[0].message.content || '';
+    aiResponse = aiResponse.trim();
+
+    if (detectedLang === 'ne') {
+      aiResponse = aiResponse.replace(/\b(hindi|हिंदी|Hindi)\b/gi, 'नेपाली');
+    }
 
     if (userId) {
       const chat = new Chat({ userId, message, response: aiResponse, isAnonymous: false });
