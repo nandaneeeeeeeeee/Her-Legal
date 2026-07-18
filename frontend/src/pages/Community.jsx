@@ -147,10 +147,10 @@ export default function Community() {
                 <div className="community-card-header">
                   <div className="community-author">
                     <div className="community-avatar">
-                      {post.isAnonymous ? 'A' : (post.userId?.username?.[0] || 'U')}
+                      {post.isAnonymous ? 'A' : ((getAuthorName(post)?.[0]) || 'U')}
                     </div>
                     <div>
-                      <strong>{post.anonymousIdentity || post.userId?.username || t("common.anonymous")}</strong>
+                      <strong>{getAuthorName(post)}</strong>
                       <span>{timeAgo(post.createdAt)}</span>
                     </div>
                   </div>

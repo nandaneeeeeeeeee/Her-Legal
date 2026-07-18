@@ -1,4 +1,5 @@
 import { Post } from '../models/community.model.js';
+import { User } from '../models/user.model.js';
 import { Notification } from '../models/notification.model.js';
 import { ApiError } from '../utils/ApiError.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
@@ -49,28 +50,31 @@ export const getPosts = asyncHandler(async (req, res) => {
 });
 
 export const getPost = asyncHandler(async (req, res) => {
-    const post = await Post.findById(req.params.id);
+    const post = await Post.findById(req.params.id).lean();
     if (!post) throw new ApiError(404, 'Post not found');
 
+    const author = post.userId ? await User.findById(post.userId, 'username').lean() : null;
+    post.userId = author ? { _id: post.userId, username: author.username } : post.userId;
+
     post.viewCount += 1;
-    await post.save({ validateBeforeSave: false });
+    await Post.updateOne({ _id: req.params.id }, { $inc: { viewCount: 1 } });
 
     const userReacted = {};
     if (req.user) {
         const uid = req.user._id.toString();
-        for (const [type, users] of Object.entries(post.reactions)) {
-            userReacted[type] = users.some(u => u.toString() === uid);
+        for (const [type, users] of Object.entries(post.reactions || {})) {
+            userReacted[type] = (users || []).some(u => u.toString() === uid);
         }
-        userReacted.saved = post.savedBy.some(u => u.toString() === uid);
+        userReacted.saved = (post.savedBy || []).some(u => u.toString() === uid);
     }
 
     return ApiResponse.success(res, 'Post fetched', {
         post: {
-            ...post.toObject(),
+            ...post,
             reactionCounts: {
-                helpful: post.reactions.helpful.length,
-                supportive: post.reactions.supportive.length,
-                insightful: post.reactions.insightful.length,
+                helpful: (post.reactions?.helpful || []).length,
+                supportive: (post.reactions?.supportive || []).length,
+                insightful: (post.reactions?.insightful || []).length,
             },
             userReacted,
         },
