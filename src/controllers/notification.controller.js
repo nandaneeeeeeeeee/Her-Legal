@@ -45,7 +45,7 @@ export const markAsRead = asyncHandler(async (req, res) => {
 export const deleteNotification = asyncHandler(async (req, res) => {
     const { id } = req.params;
 
-    if (id === 'all') {
+    if (!id || id === 'all') {
         await Notification.deleteMany({ userId: req.user._id });
         return ApiResponse.success(res, 'All notifications deleted');
     }
