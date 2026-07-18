@@ -2,27 +2,5 @@
   "version": 2,
   "framework": "vite",
   "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "routes": [
-    {
-      "src": "/images/(.*)",
-      "dest": "/images/$1"
-    },
-    {
-      "src": "/logo\\.jpeg",
-      "dest": "/logo.jpeg"
-    },
-    {
-      "src": "/favicon\\.svg",
-      "dest": "/favicon.svg"
-    },
-    {
-      "src": "/icons\\.svg",
-      "dest": "/icons.svg"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
-  ]
+  "outputDirectory": "dist"
 }
