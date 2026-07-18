@@ -25,7 +25,7 @@ function ChatbotWidget() {
     setMessages((prev) => [...prev, { role: "user", content: text }]);
     setLoading(true);
     try {
-      const res = await fetch("/api/v1/chatbot/chat", {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || '/api/v1'}/chatbot/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: text, userId: user?._id, language: lang }),

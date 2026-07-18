@@ -16,7 +16,7 @@ function Confessions() {
 
   const fetchPosts = async () => {
     try {
-      const res = await fetch("/api/v1/confessions");
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || '/api/v1'}/confessions`);
       const data = await res.json();
       setPosts(data);
     } catch {}
@@ -26,7 +26,7 @@ function Confessions() {
     if (!text.trim() || loading) return;
     setLoading(true);
     try {
-      const res = await fetch("/api/v1/confessions", {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || '/api/v1'}/confessions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text, isAnonymous: anonymous }),
@@ -44,7 +44,7 @@ function Confessions() {
     const text = replyText[postId]?.trim();
     if (!text) return;
     try {
-      const res = await fetch(`/api/v1/confessions/${postId}/reply`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || '/api/v1'}/confessions/${postId}/reply`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text }),

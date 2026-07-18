@@ -85,7 +85,7 @@ function ChatPage() {
     if (!user) return;
     setLoadingConvs(true);
     try {
-      const res = await fetch(`/api/v1/chatbot/conversations/${user._id}`);
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || '/api/v1'}/chatbot/conversations/${user._id}`);
       if (res.ok) {
         const data = await res.json();
         console.log("[conv] fetched:", data.length);
@@ -105,7 +105,7 @@ function ChatPage() {
 
   const fetchMessages = async (convId) => {
     try {
-      const res = await fetch(`/api/v1/chatbot/conversation/${convId}`);
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || '/api/v1'}/chatbot/conversation/${convId}`);
       if (res.ok) setMessages(await res.json());
     } catch {}
   };
@@ -113,7 +113,7 @@ function ChatPage() {
   const createConversation = async () => {
     if (!user) return;
     try {
-      const res = await fetch("/api/v1/chatbot/conversations", {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || '/api/v1'}/chatbot/conversations`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId: user._id }),
@@ -136,7 +136,7 @@ function ChatPage() {
   const deleteConversation = async (convId, e) => {
     e.stopPropagation();
     try {
-      await fetch(`/api/v1/chatbot/conversation/${convId}`, { method: "DELETE" });
+      await fetch(`${import.meta.env.VITE_API_BASE_URL || '/api/v1'}/chatbot/conversation/${convId}`, { method: "DELETE" });
       setConversations((prev) => prev.filter((c) => c._id !== convId));
       if (activeConv === convId) {
         setActiveConvAndPersist(null);
@@ -148,7 +148,7 @@ function ChatPage() {
   const renameConv = async (convId) => {
     if (!editTitleValue.trim()) return;
     try {
-      const res = await fetch(`/api/v1/chatbot/conversation/${convId}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || '/api/v1'}/chatbot/conversation/${convId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title: editTitleValue.trim() }),
@@ -177,7 +177,7 @@ function ChatPage() {
     let convId = activeConv;
     if (!convId && user) {
       try {
-        const res = await fetch("/api/v1/chatbot/conversations", {
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || '/api/v1'}/chatbot/conversations`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ userId: user._id }),
@@ -202,7 +202,7 @@ function ChatPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/v1/chatbot/chat", {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || '/api/v1'}/chatbot/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: msg, userId: user?._id, conversationId: convId, language: lang }),
