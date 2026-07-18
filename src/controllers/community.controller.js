@@ -132,20 +132,31 @@ export const reactToPost = asyncHandler(async (req, res) => {
     if (!post) throw new ApiError(404, 'Post not found');
 
     const userId = req.user._id;
-    const idx = post.reactions[type].indexOf(userId);
+    let currentType = null;
 
-    const isReacted = idx === -1;
+    for (const reactionType of validTypes) {
+        const idx = post.reactions[reactionType].findIndex(id => id.toString() === userId.toString());
+        if (idx > -1) {
+            currentType = reactionType;
+            post.reactions[reactionType].splice(idx, 1);
+        }
+    }
 
-    if (idx > -1) {
-        post.reactions[type].splice(idx, 1);
-    } else {
+    const isSameReaction = currentType === type;
+    if (!isSameReaction) {
         post.reactions[type].push(userId);
     }
 
     await post.save({ validateBeforeSave: false });
 
+    const counts = {
+        helpful: post.reactions.helpful.length,
+        supportive: post.reactions.supportive.length,
+        insightful: post.reactions.insightful.length,
+    };
+
     // Notify author on reaction
-    if (isReacted && post.userId.toString() !== userId.toString()) {
+    if (!isSameReaction && post.userId.toString() !== userId.toString()) {
         await Notification.create({
             userId: post.userId,
             type: 'reaction',
@@ -157,8 +168,9 @@ export const reactToPost = asyncHandler(async (req, res) => {
 
     return ApiResponse.success(res, 'Reaction updated', {
         type,
-        count: post.reactions[type].length,
-        reacted: isReacted,
+        counts,
+        reacted: !isSameReaction,
+        userReaction: isSameReaction ? null : type,
     });
 });
 

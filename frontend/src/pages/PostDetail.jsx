@@ -51,9 +51,20 @@ export default function PostDetail() {
     try {
       const data = await reactToPost(id, type);
       setPost(prev => {
-        const counts = { ...prev.reactionCounts, [type]: data.data.count };
-        const reacted = { ...prev.userReacted, [type]: data.data.reacted };
-        return { ...prev, reactionCounts: counts, userReacted: reacted };
+        const reacted = {
+          helpful: false,
+          supportive: false,
+          insightful: false,
+          saved: prev.userReacted?.saved || false,
+        };
+        if (data.data.userReaction) {
+          reacted[data.data.userReaction] = true;
+        }
+        return {
+          ...prev,
+          reactionCounts: data.data.counts || prev.reactionCounts,
+          userReacted: reacted,
+        };
       });
     } catch {}
   };
