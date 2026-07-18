@@ -18,6 +18,7 @@ export default function NotificationsPage() {
   const [notifs, setNotifs] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [success, setSuccess] = useState("");
 
   useEffect(() => { load(); }, []);
 
@@ -52,6 +53,8 @@ export default function NotificationsPage() {
       await clearAllNotifications();
       setNotifs([]);
       setUnreadCount(0);
+      setSuccess(t("notificationsPage.clearedAllSuccess"));
+      setTimeout(() => setSuccess(""), 3000);
     } catch {}
   };
 
@@ -76,6 +79,7 @@ export default function NotificationsPage() {
               <ArrowLeft size={14} /> {t("common.dashboard")}
             </Link>
             <h1 style={{ fontSize: 24 }}>{t("notificationsPage.title")}</h1>
+            {success && <div className="auth-success" style={{ marginTop: 12 }}>{success}</div>}
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
             {notifs.length > 0 && (
