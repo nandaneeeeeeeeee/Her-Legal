@@ -10,6 +10,7 @@ router.use(verifyJWT(['user', 'admin']));
 
 router.get('/', getNotifications);
 router.patch('/:id/read', markAsRead);
+router.patch('/all/read', markAsRead);
 router.delete('/:id', deleteNotification);
 
 export default router;
